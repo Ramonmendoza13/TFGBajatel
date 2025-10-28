@@ -17,5 +17,3 @@ Route::prefix('usuario')->group(function () {
     Route::middleware('auth:sanctum')->delete('/eliminarCuenta', [UsuarioController::class, 'eliminarCuenta']); // Ruta protegida por token para borrar cuenta
     Route::middleware('auth:sanctum')->post('/logout', [UsuarioController::class, 'logout']);
 });
-
-
