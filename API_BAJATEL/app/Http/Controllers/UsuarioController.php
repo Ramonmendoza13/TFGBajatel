@@ -103,26 +103,13 @@ class UsuarioController extends Controller
      */
     public function eliminarCuenta(Request $request)
     {
-        try {
-            $usuario = $request->user(); // Obtener el usuario autenticado mediante el token
+        $usuario = $request->user(); // Obtener el usuario autenticado mediante el token
 
-            if (!$usuario) {
-                return response()->json([
-                    'mensaje' => 'Usuario no autenticado.',
-                ], 401);
-            }
+        $usuario->delete(); // Borrar el usuario de la base de datos
 
-            $usuario->delete(); // Borrar el usuario de la base de datos
-
-            return response()->json([
-                'mensaje' => 'Cuenta de usuario borrada correctamente.',
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'mensaje' => 'Error en el servidor',
-                'error' => config('app.debug') ? $e->getMessage() : 'Ocurrió un error inesperado.',
-            ], 500);
-        }
+        return response()->json([
+            'mensaje' => 'Cuenta de usuario borrada correctamente.',
+        ], 200);
     }
 
     /**
@@ -130,25 +117,13 @@ class UsuarioController extends Controller
      */
     public function logout(Request $request)
     {
-        try {
-            // Obtener el usuario autenticado mediante el token
-            $usuario = $request->user();
-            if (!$usuario) {
-                return response()->json([
-                    'mensaje' => 'Usuario no autenticado.',
-                ], 401);
-            }
-            // Revocar todos los tokens del usuario
-            $usuario->currentAccessToken()->delete();
-            return response()->json([
-                'mensaje' => 'Cierre de sesión exitoso.',
-            ], 200);
-        } catch (\Exception $e) {
-            // Error del servidor
-            return response()->json([
-                'mensaje' => 'Error en el servidor',
-                'error' => config('app.debug') ? $e->getMessage() : 'Ocurrió un error inesperado.',
-            ], 500);
-        }
+        // Obtener el usuario autenticado mediante el token
+        $usuario = $request->user();
+
+        // Revocar todos los tokens del usuario
+        $usuario->currentAccessToken()->delete();
+        return response()->json([
+            'mensaje' => 'Cierre de sesión exitoso.',
+        ], 200);
     }
 }
