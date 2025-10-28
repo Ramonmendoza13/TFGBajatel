@@ -21,8 +21,8 @@ class UsuariosSeeder extends Seeder
                 $usuario->apellidos = 'García Pozo';
                 $usuario->dni = '11112222C';
                 $usuario->email = 'laura@gmail.com';
-                $usuario->rol = 'usuario';
-                $usuario->contraseña =  Hash::make('LGP1');
+                $usuario->rol = 'cliente';
+                $usuario->password =  Hash::make('LGP1');
                 $usuario->save();
             }
 
@@ -32,8 +32,8 @@ class UsuariosSeeder extends Seeder
                 $usuario->apellidos = 'Soto Castro';
                 $usuario->dni = '55667788B';
                 $usuario->email = 'paco@gmail.com';
-                $usuario->rol = 'usuario';
-                $usuario->contraseña =  Hash::make('PSC1');
+                $usuario->rol = 'cliente';
+                $usuario->password =  Hash::make('PSC1');
                 $usuario->save();
             }
 
@@ -44,7 +44,7 @@ class UsuariosSeeder extends Seeder
                 $usuario->dni = '12345678S';
                 $usuario->email = 'rmc1@email.com';
                 $usuario->rol = 'admin';
-                $usuario->contraseña =  Hash::make('RMC1');
+                $usuario->password =  Hash::make('RMC1');
                 $usuario->save();
             }
 
@@ -55,7 +55,7 @@ class UsuariosSeeder extends Seeder
                 $usuario->dni = '333333333A';
                 $usuario->email = 'fad@gmail.com';
                 $usuario->rol = 'gestor';
-                $usuario->contraseña = Hash::make('FAD1');
+                $usuario->password = Hash::make('FAD1');
                 $usuario->save();
             }
         }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('dni', 15)->unique();
             $table->string('email', 100)->unique();
             $table->string('rol', 50);
-            $table->string('contraseña', 255);
+            $table->string('password', 255);
             $table->timestamps();
         });
     }
