@@ -19,9 +19,23 @@ class LineaMovilContratada extends Model
         return $this->belongsTo(ContratoServicio::class, 'id_servicio');
     }
 
-    public function opcionMovil()
+    public function movilOpcion()
     {
         return $this->belongsTo(MovilOpcion::class, 'id_movil');
     }
-}
 
+    protected static function booted()
+    {
+        static::created(function ($linea) {
+            $linea->servicio->contrato->actualizarPrecioTotal();
+        });
+
+        static::updated(function ($linea) {
+            $linea->servicio->contrato->actualizarPrecioTotal();
+        });
+
+        static::deleted(function ($linea) {
+            $linea->servicio->contrato->actualizarPrecioTotal();
+        });
+    }
+}
