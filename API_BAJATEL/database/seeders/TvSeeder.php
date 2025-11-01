@@ -19,6 +19,7 @@ class TvSeeder extends Seeder
                 $tv = new TvOpcion();
                 $tv->nombre_paquete = 'Básico';
                 $tv->precio = 5;
+                $tv->disponible = true;
                 $tv->save();
             }
 
@@ -26,6 +27,7 @@ class TvSeeder extends Seeder
                 $tv = new TvOpcion();
                 $tv->nombre_paquete = 'Premium';
                 $tv->precio = 11.99;
+                $tv->disponible = true;
                 $tv->save();
             }
         }

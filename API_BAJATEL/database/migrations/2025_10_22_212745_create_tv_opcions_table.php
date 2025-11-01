@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('id_tv');
             $table->string('nombre_paquete');
             $table->decimal('precio', 8, 2);
+            $table->boolean('disponible')->default(true);
             $table->timestamps();
         });
     }

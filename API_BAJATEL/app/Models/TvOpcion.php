@@ -12,7 +12,11 @@ class TvOpcion extends Model
     protected $table = 'tv_opciones';
     protected $primaryKey = 'id_tv';
 
-    protected $fillable = ['nombre_paquete', 'precio'];
+    protected $fillable = ['nombre_paquete', 'precio', 'disponible'];
+
+    protected $casts = [
+        'disponible' => 'boolean',
+    ];
 
     public function contratosServicio()
     {

@@ -11,8 +11,12 @@ class FibraOpcion extends Model
 
     protected $table = 'fibra_opciones';
     protected $primaryKey = 'id_fibra';
-    
-    protected $fillable = ['velocidad', 'precio'];
+
+    protected $fillable = ['velocidad', 'precio', 'disponible'];
+
+    protected $casts = [
+        'disponible' => 'boolean',
+    ];
 
     public function contratosServicio()
     {

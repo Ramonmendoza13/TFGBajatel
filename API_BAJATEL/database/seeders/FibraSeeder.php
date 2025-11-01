@@ -20,6 +20,7 @@ class FibraSeeder extends Seeder
                 $fibra = new FibraOpcion();
                 $fibra->velocidad = '300Mbps';
                 $fibra->precio = 29.99;
+                $fibra->disponible = true;
                 $fibra->save();
             }
 
@@ -27,6 +28,7 @@ class FibraSeeder extends Seeder
                 $fibra = new FibraOpcion();
                 $fibra->velocidad = '1 Gbps';
                 $fibra->precio = 45;
+                $fibra->disponible = true;
                 $fibra->save();
             }
         }

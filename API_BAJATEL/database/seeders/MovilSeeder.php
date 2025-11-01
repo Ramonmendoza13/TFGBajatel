@@ -20,6 +20,7 @@ class MovilSeeder extends Seeder
                 $movil->gb_datos = '20GB';
                 $movil->min_llamadas = 120;
                 $movil->precio = 10;
+                $movil->disponible = true;
                 $movil->save();
             }
 
@@ -28,6 +29,7 @@ class MovilSeeder extends Seeder
                 $movil->gb_datos = '100GB';
                 $movil->min_llamadas = -1; // Ilimitadas
                 $movil->precio = 15;
+                $movil->disponible = true;
                 $movil->save();
             }
 
@@ -36,6 +38,7 @@ class MovilSeeder extends Seeder
                 $movil->gb_datos = 'Ilimitados';
                 $movil->min_llamadas = -1; // Ilimitadas
                 $movil->precio = 20;
+                $movil->disponible = true;
                 $movil->save();
             }
         }

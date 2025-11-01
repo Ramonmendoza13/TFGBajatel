@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('gb_datos');
             $table->integer('min_llamadas');
             $table->decimal('precio', 8, 2);
+            $table->boolean('disponible')->default(true);
             $table->timestamps();
         });
     }

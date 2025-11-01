@@ -12,7 +12,11 @@ class MovilOpcion extends Model
     protected $table = 'movil_opciones';
     protected $primaryKey = 'id_movil';
 
-    protected $fillable = ['gb_datos', 'min_llamadas', 'precio'];
+    protected $fillable = ['gb_datos', 'min_llamadas', 'precio', 'disponible'];
+
+    protected $casts = [
+        'disponible' => 'boolean',
+    ];
 
     public function lineas()
     {
