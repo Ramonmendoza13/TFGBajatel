@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('usuario')->group(function () {
         Route::post('/logout', [UsuarioController::class, 'logout']);
         Route::delete('/eliminarCuenta', [UsuarioController::class, 'eliminarCuenta']);
+        Route::put('/editarPerfil', [UsuarioController::class, 'editarPerfil']);
     });
 
     //Contratos (propios del usuario)
@@ -63,31 +64,46 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 });
 
-/*
-* RUTAS SOLO PARA ADMINISTRADORES
+/* 
+* RUTAS PARA ADMINISTRADORES Y GESTORES
+* (middleware 'rol' personalizado)
 */
-Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'rol:gestor,admin'])->group(function () {
 
     // Prueba de acceso admin
-    Route::get('/test', fn() => response()->json(['mensaje' => 'ACCESO ADMIN CORRECTO'], 200));
+    Route::get('/testAdmin', fn() => response()->json(['mensaje' => 'ACCESO ADMIN CORRECTO'], 200));
 
     // Gestión de servicios
     Route::prefix('servicios')->group(function () {
+
+        // CAMBIAR LAS RUTAS DE DISPONIBILIDAD POR UNA DE EDITAR SERVICIO, INCLUYENDO PRECIO, NOMBRE, MB, GBs...
         // Fibra
         Route::post('/fibra', [FibraOpcionController::class, 'anadirOpcionFibra']);
-        Route::put('/fibra/{id}/disponibilidad', [FibraOpcionController::class, 'cambiarDisponibilidadFibra'])->whereNumber('id');
+        Route::put('/fibra/{id}', [FibraOpcionController::class, 'editarOpcionFibra'])->whereNumber('id');
 
         // TV
         Route::post('/tv', [TVOpcionController::class, 'anadirOpcionTV']);
-        Route::put('/tv/{id}/disponibilidad', [TVOpcionController::class, 'cambiarDisponibilidadTV'])->whereNumber('id');
+        Route::put('/tv/{id}', [TVOpcionController::class, 'editarOpcionTV'])->whereNumber('id');
 
         // Móvil
         Route::post('/movil', [MovilOpcionController::class, 'anadirOpcionMovil']);
-        Route::put('/movil/{id}/disponibilidad', [MovilOpcionController::class, 'cambiarDisponibilidadMovil'])->whereNumber('id');
+        Route::put('/movil/{id}', [MovilOpcionController::class, 'editarOpcionMovil'])->whereNumber('id');
 
         // Mostrar todo (sin filtrar por disponibilidad)
         Route::get('/mostrar', [ServiciosController::class, 'mostrarTodosServicios']);
     });
 
-    // AÑADIR Gestión de usuarios
+    // Listar usuarios y sus contratos 
+    Route::get('/usuarios', [UsuarioController::class, 'listarUsuariosConContratos']);
 });
+
+/*
+* RUTAS SOLO PARA ADMINISTRADORES
+*/
+Route::middleware(['auth:sanctum', 'rol:admin'])->group(function () {
+    // AÑADIR Gestión de usuarios, cambio de rol aun usario(Si es cliente asciende a gestor y si es gestor desciende usario, ADMIN no puede ser modificado)
+    Route::put('/usuario/{id}/gestionarRol', [UsuarioController::class, 'gestionarRol'])->whereNumber('id'); 
+    Route::delete('/usuario/{id}', [UsuarioController::class, 'eliminarUsuario'])->whereNumber('id');
+});
+
+// SOLO FALTA CAMBIAR EL IDIOMA DE LOS MENSAJES DE ERROR A ESPAÑOL PARA ACABAR LA API

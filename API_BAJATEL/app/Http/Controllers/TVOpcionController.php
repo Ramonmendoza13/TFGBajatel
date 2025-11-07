@@ -47,24 +47,34 @@ class TVOpcionController extends Controller
         ], 200);
     }
     /**
-     * Cambiar la disponibilidad de una opcion de TV
+     * Editar una opcion de TV existente
      */
-    public function cambiarDisponibilidadTV($id)
+    public function editarOpcionTV(Request $request, $id)
     {
         $tvOpcion = TvOpcion::find($id);
-
         if (!$tvOpcion) {
             return response()->json([
                 'mensaje' => 'Opción de TV no encontrada',
             ], 404);
         }
-        // Cambiar el valor actual al contrario (true ↔ false)
-        $tvOpcion->disponible = !$tvOpcion->disponible;
+        $request->validate([
+            'nombre_paquete' => 'sometimes|required|string|max:255',
+            'precio' => 'sometimes|required|numeric|min:0',
+            'disponible' => 'sometimes|required|boolean',
+        ]);
 
+        if ($request->has('nombre_paquete')) {
+            $tvOpcion->nombre_paquete = $request->nombre_paquete;
+        }
+        if ($request->has('precio')) {
+            $tvOpcion->precio = $request->precio;
+        }
+        if ($request->has('disponible')) {
+            $tvOpcion->disponible = $request->disponible;
+        }
         $tvOpcion->save();
-
         return response()->json([
-            'mensaje' => 'Disponibilidad de la opción de TV cambiada correctamente',
+            'mensaje' => 'Opción de TV editada correctamente',
             'datos' => $tvOpcion,
         ], 200);
     }

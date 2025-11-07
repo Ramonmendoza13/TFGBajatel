@@ -49,9 +49,9 @@ class MovilOpcionController extends Controller
         ], 200);
     }
     /**
-     * Cambiar la disponibilidad de una opcion de Movil
+     * Editar una opcion de Movil existente
      */
-    public function cambiarDisponibilidadMovil($id)
+    public function editarOpcionMovil(Request $request, $id)
     {
         $movilOpcion = MovilOpcion::find($id);
         if (!$movilOpcion) {
@@ -59,12 +59,28 @@ class MovilOpcionController extends Controller
                 'mensaje' => 'Opción de Móvil no encontrada',
             ], 404);
         }
-        // Cambiar el valor actual al contrario (true ↔ false)
-        $movilOpcion->disponible = !$movilOpcion->disponible;
-        $movilOpcion->save();
+        $request->validate([
+            'gb_datos' => 'sometimes|required|string|max:255',
+            'minutos' => 'sometimes|required|numeric|min:0',
+            'precio' => 'sometimes|required|numeric|min:0',
+            'disponible' => 'sometimes|required|boolean',
+        ]);
 
+        if ($request->has('gb_datos')) {
+            $movilOpcion->gb_datos = $request->gb_datos;
+        }
+        if ($request->has('minutos')) {
+            $movilOpcion->min_llamadas = $request->minutos;
+        }
+        if ($request->has('precio')) {
+            $movilOpcion->precio = $request->precio;
+        }
+        if ($request->has('disponible')) {
+            $movilOpcion->disponible = $request->disponible;
+        }
+        $movilOpcion->save();
         return response()->json([
-            'mensaje' => 'Disponibilidad de la opción de Móvil cambiada correctamente',
+            'mensaje' => 'Opción de Móvil editada correctamente',
             'datos' => $movilOpcion,
         ], 200);
     }

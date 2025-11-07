@@ -47,26 +47,37 @@ class FibraOpcionController extends Controller
     }
 
     /**
-     * 
+     * Editar una opción de fibra existente.
      */
-    public function cambiarDisponibilidadFibra($id)
+    public function editarOpcionFibra(Request $request, $id)
     {
         // Buscar la opción de fibra por ID
         $fibraOpcion = FibraOpcion::find($id);
-
         if (!$fibraOpcion) {
             return response()->json([
                 'mensaje' => 'Opción de fibra no encontrada',
             ], 404);
         }
-        // Cambiar el valor actual al contrario (true ↔ false)
-        $fibraOpcion->disponible = !$fibraOpcion->disponible;
-
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'velocidad' => 'sometimes|required|string|max:255',
+            'precio' => 'sometimes|required|numeric',
+            'disponible' => 'sometimes|required|boolean',
+        ]);
+        // Actualizar los campos si están presentes en la solicitud
+        if (isset($validatedData['velocidad'])) {
+            $fibraOpcion->velocidad = $validatedData['velocidad'];
+        }
+        if (isset($validatedData['precio'])) {
+            $fibraOpcion->precio = $validatedData['precio'];
+        }
+        if (isset($validatedData['disponible'])) {
+            $fibraOpcion->disponible = $validatedData['disponible'];
+        }
         $fibraOpcion->save();
-
         return response()->json([
-            'mensaje' => 'Disponibilidad de fibra cambiada correctamente',
+            'mensaje' => 'Opción de fibra actualizada correctamente',
             'datos' => $fibraOpcion,
-        ], 201);
+        ], 200);
     }
 }
