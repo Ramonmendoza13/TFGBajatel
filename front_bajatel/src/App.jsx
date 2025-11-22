@@ -1,9 +1,15 @@
-import React from 'react';
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import NotFoundPage from "./pages/NotFoundPage";
+
+
 const App = () => {
   return (
-    <div className="bg-blue-500 text-white p-4">
-      <h1 className="text-4xl font-bold">¡Bienvenido(a) a mi aplicación con Tailwind!</h1>
-      <p className="text-lg">Explora todas las posibilidades que ofrece Tailwind para tu proyecto de React.</p>
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFoundPage />} /> {/* Ruta comodín */}
+      </Routes>
     </div>
   );
 };

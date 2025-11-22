@@ -105,5 +105,3 @@ Route::middleware(['auth:sanctum', 'rol:admin'])->group(function () {
     Route::put('/usuario/{id}/gestionarRol', [UsuarioController::class, 'gestionarRol'])->whereNumber('id'); 
     Route::delete('/usuario/{id}', [UsuarioController::class, 'eliminarUsuario'])->whereNumber('id');
 });
-
-// SOLO FALTA CAMBIAR EL IDIOMA DE LOS MENSAJES DE ERROR A ESPAÑOL PARA ACABAR LA API
