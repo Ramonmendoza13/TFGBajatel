@@ -1,18 +1,56 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ServiciosPage from "./pages/ServiciosPage";
-
+import LoginPage from "./pages/LoginPage";
+import Layout from "./Layout";
+import ZonaPrivadaPage from "./pages/ZonaPrivadaPage";
 
 const App = () => {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/servicios" element={<ServiciosPage />} />
-        <Route path="*" element={<NotFoundPage />} /> {/* Ruta comodín */}
-      </Routes>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Layout>
+            <HomePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/servicios"
+        element={
+          <Layout>
+            <ServiciosPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <Layout>
+            <LoginPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/zona-privada"
+        element={
+          <Layout>
+            <ZonaPrivadaPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <Layout>
+            <NotFoundPage />
+          </Layout>
+        }
+      />
+    </Routes>
   );
 };
+
 export default App;

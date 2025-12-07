@@ -25,17 +25,19 @@ class ContratosSeeder extends Seeder
                 $contrato->calle_y_n = '28 de Febrero nº 10';
                 $contrato->ciudad = 'Badolatosa';
                 $contrato->provincia = 'Sevilla';
+                $contrato->codigo_postal = '41590';
                 $contrato->id_usuario = 1;
                 $contrato->save();
             }
             if (Contrato::where('id_contrato', 2)->doesntExist()) {
                 $contrato = new Contrato();
                 $contrato->fecha_alta = '2025-01-10';
-                $contrato->precio_total = 29.99;
+                $contrato->precio_total = 30.00;
                 $contrato->IBAN = 'ES00 0000 0000 0000 0002';
                 $contrato->calle_y_n = 'Avenida Andalucia nº 8';
                 $contrato->ciudad = 'Estepa';
                 $contrato->provincia = 'Sevilla';
+                $contrato->codigo_postal = '41500';
                 $contrato->id_usuario = 2;
                 $contrato->save();
             }

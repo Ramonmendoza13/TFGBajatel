@@ -2,36 +2,54 @@ import { useState } from 'react';
 import { Link } from "react-router-dom";
 import Logo from '../assets/imagenes/LOGO_SIMPLE.png';
 import { Menu, X, LogIn } from 'lucide-react';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { User } from "lucide-react"; // icono para zona privada
+
 
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
+    const { token } = useContext(AuthContext);
+
 
     const navItems = (
         <>
-            <Link 
-                to="/servicios" 
+            <Link
+                to="/servicios"
                 className="text-gray-600 font-medium hover:text-blue-600 transition-colors duration-300 py-2"
-                onClick={() => setIsOpen(false)}
-            > 
-                Servicios 
-            </Link>
-            <Link 
-                to="/contratar" 
-                className="text-gray-600 font-medium hover:text-blue-600 transition-colors duration-300 py-2"
-                onClick={() => setIsOpen(false)}
-            > 
-                Contratar 
-            </Link>
-            
-            {/* Botón Principal - Estilo coherente con el Hero */}
-            <Link 
-                to="/login" 
-                className="flex items-center gap-2 py-2.5 px-6 bg-blue-600 text-white font-bold rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
                 onClick={() => setIsOpen(false)}
             >
-                <LogIn className="w-4 h-4" /> 
-                Login
+                Servicios
             </Link>
+
+            <Link
+                to="/contratar"
+                className="text-gray-600 font-medium hover:text-blue-600 transition-colors duration-300 py-2"
+                onClick={() => setIsOpen(false)}
+            >
+                Contratar
+            </Link>
+
+            {/* Mostrar Login o Zona Privada según haya token */}
+            {!token ? (
+                <Link
+                    to="/login"
+                    className="flex items-center gap-2 py-2.5 px-6 bg-blue-600 text-white font-bold rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                    onClick={() => setIsOpen(false)}
+                >
+                    <LogIn className="w-4 h-4" />
+                    Login
+                </Link>
+            ) : (
+                <Link
+                    to="/zona-privada"
+                    className="flex items-center gap-2 py-2.5 px-6 bg-green-600 text-white font-bold rounded-full shadow-md hover:bg-green-700 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                    onClick={() => setIsOpen(false)}
+                >
+                    <User className="w-4 h-4" />
+                    Zona Privada
+                </Link>
+            )}
         </>
     );
 
@@ -77,8 +95,8 @@ export default function NavBar() {
             </div>
 
             {/* MENÚ MÓVIL (Desplegable) */}
-            <div 
-                className={`md:hidden bg-white border-t border-gray-100 absolute w-full left-0 transition-all duration-300 ease-in-out origin-top ${isOpen ? 'scale-y-100 opacity-100 shadow-xl' : 'scale-y-0 opacity-0 h-0'}`} 
+            <div
+                className={`md:hidden bg-white border-t border-gray-100 absolute w-full left-0 transition-all duration-300 ease-in-out origin-top ${isOpen ? 'scale-y-100 opacity-100 shadow-xl' : 'scale-y-0 opacity-0 h-0'}`}
                 id="mobile-menu"
             >
                 <div className="px-6 py-6 space-y-4 flex flex-col items-center">

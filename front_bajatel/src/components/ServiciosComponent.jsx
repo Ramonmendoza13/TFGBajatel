@@ -20,11 +20,11 @@ function ServiciosComponent() {
     );
 
     return (
-        <div className="bg-gray-50 min-h-screen font-sans">
+        <div className="flex-grow flex flex-col w-full bg-gray-50 ">
             
             <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white pt-40 pb-32 md:pt-48 md:pb-48 px-4 text-center relative overflow-hidden">
                 
-                <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
+                <div className="absolute top-0 left-0 w-full opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
 
                 <div className="relative z-10 max-w-4xl mx-auto">
                     <h2 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight drop-shadow-md">

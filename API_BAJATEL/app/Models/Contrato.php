@@ -14,6 +14,7 @@ class Contrato extends Model
         'calle_y_n',
         'ciudad',
         'provincia',
+        'codigo_postal',
         'id_usuario'
     ];
 

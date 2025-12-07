@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('calle_y_n', 255)->nullable();
             $table->string('ciudad', 100)->nullable();
             $table->string('provincia', 100)->nullable();
+            $table->string('codigo_postal', 20)->nullable();
 
             // FK hacia USUARIO
             $table->unsignedInteger('id_usuario')->unique();
