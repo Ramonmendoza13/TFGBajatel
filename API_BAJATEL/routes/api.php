@@ -50,7 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('contratos')->group(function () {
         Route::post('/crear', [ContratoController::class, 'crear']);
         Route::put('/actualizar', [ContratoController::class, 'actualizar']);
-        Route::delete('/eliminar', [ContratoController::class, 'eliminar']);
+        Route::delete('/cancelar', [ContratoController::class, 'cancelar']);
         Route::get('/mostrar', [ContratoController::class, 'mostrar']);
 
         // Servicios asociados a contratos

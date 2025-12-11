@@ -15,3 +15,16 @@ export const getContratoUsuario = async (token) => {
         throw err;
     }
 };
+
+export const cancelarContratoUsuario = async (token) => {
+    try {
+        const { data } = await axiosClient.delete("contratos/cancelar/", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return data; // devuelve mensaje de éxito
+    } catch (err) {
+        throw err;
+    }
+} 

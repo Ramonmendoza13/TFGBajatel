@@ -17,3 +17,30 @@ export const logoutRequest = async (token) => {
     );
     return data;
 };
+
+// authApi.js
+export const editarPerfil = async (email, passwordActual, passwordNueva = "", token) => {
+    const data = {
+        email,
+        passwordActual,
+        passwordNueva,
+    };
+
+    try {
+        const response = await axiosClient.put("/usuario/editarPerfil", data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            // Permite que Axios devuelva el control al 'try' para códigos < 500
+            validateStatus: (status) => status >= 200 && status < 500, 
+        });
+        
+        // Devuelve la respuesta completa (incluyendo data, status, etc.)
+        return response; 
+        
+    } catch (error) {
+        // Esto solo atrapará errores de red, de configuración o 5xx.
+        throw error;
+    }
+};
+

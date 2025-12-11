@@ -24,8 +24,15 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("usuario");
     };
 
+    // Función para actualizar solo el objeto de usuario (usada en edición de perfil)
+    const updateUser = (newUserData) => {
+        setUsuario(newUserData);
+        // CRÍTICO: Actualizar también el localStorage
+        localStorage.setItem("usuario", JSON.stringify(newUserData));
+    };
+
     return (
-        <AuthContext.Provider value={{ token, usuario, login, logout }}>
+        <AuthContext.Provider value={{ token, usuario, login, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

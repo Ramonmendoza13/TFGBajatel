@@ -5,6 +5,7 @@ import ServiciosPage from "./pages/ServiciosPage";
 import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import ZonaPrivadaPage from "./pages/ZonaPrivadaPage";
+import EditarPerfilPage from "./pages/EditarPerfilPage";
 
 const App = () => {
   return (
@@ -38,6 +39,14 @@ const App = () => {
         element={
           <Layout>
             <ZonaPrivadaPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/editar-perfil"
+        element={
+          <Layout>
+            <EditarPerfilPage />
           </Layout>
         }
       />

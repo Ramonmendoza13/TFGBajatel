@@ -76,7 +76,7 @@ class ContratoController extends Controller
     /**
      * Eliminar un contrato
      */
-    public function eliminar(Request $request)
+    public function cancelar(Request $request)
     {
         $id_usuario = $request->user()->id_usuario;
         $contrato = Contrato::where('id_usuario', $id_usuario)->first();
