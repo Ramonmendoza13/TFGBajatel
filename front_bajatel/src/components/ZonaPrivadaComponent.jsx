@@ -14,7 +14,7 @@ function ZonaPrivadaComponent() {
     try {
       await logoutRequest(token);
       logout();
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       console.error("Error al cerrar sesión", err);
     }
@@ -44,6 +44,16 @@ function ZonaPrivadaComponent() {
             </Link>
             {/* ------------------------------------------- */}
           </div>
+          {usuario.rol === "admin" && (
+            <Link
+              to="/admin"
+              className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-600 font-semibold text-sm rounded-md border border-green-300 hover:bg-green-200 transition whitespace-nowrap"
+            >
+              <Pencil size={16} /> Panel Admin
+            </Link>
+          )}
+
+
 
           <button
             onClick={handleLogout}

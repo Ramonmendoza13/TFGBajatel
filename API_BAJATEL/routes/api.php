@@ -76,7 +76,6 @@ Route::middleware(['auth:sanctum', 'rol:gestor,admin'])->group(function () {
     // Gestión de servicios
     Route::prefix('servicios')->group(function () {
 
-        // CAMBIAR LAS RUTAS DE DISPONIBILIDAD POR UNA DE EDITAR SERVICIO, INCLUYENDO PRECIO, NOMBRE, MB, GBs...
         // Fibra
         Route::post('/fibra', [FibraOpcionController::class, 'anadirOpcionFibra']);
         Route::put('/fibra/{id}', [FibraOpcionController::class, 'editarOpcionFibra'])->whereNumber('id');
@@ -101,7 +100,7 @@ Route::middleware(['auth:sanctum', 'rol:gestor,admin'])->group(function () {
 * RUTAS SOLO PARA ADMINISTRADORES
 */
 Route::middleware(['auth:sanctum', 'rol:admin'])->group(function () {
-    // AÑADIR Gestión de usuarios, cambio de rol aun usario(Si es cliente asciende a gestor y si es gestor desciende usario, ADMIN no puede ser modificado)
+    //  Gestión de usuarios, cambio de rol aun usario(Si es cliente asciende a gestor y si es gestor desciende usario, ADMIN no puede ser modificado)
     Route::put('/usuario/{id}/gestionarRol', [UsuarioController::class, 'gestionarRol'])->whereNumber('id'); 
     Route::delete('/usuario/{id}', [UsuarioController::class, 'eliminarUsuario'])->whereNumber('id');
 });

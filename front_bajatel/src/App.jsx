@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import ZonaPrivadaPage from "./pages/ZonaPrivadaPage";
 import EditarPerfilPage from "./pages/EditarPerfilPage";
+import AdminPage from "./pages/AdminPage";
 
 const App = () => {
   return (
@@ -47,6 +48,14 @@ const App = () => {
         element={
           <Layout>
             <EditarPerfilPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <Layout>
+            <AdminPage />
           </Layout>
         }
       />

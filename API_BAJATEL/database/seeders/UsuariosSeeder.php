@@ -37,7 +37,7 @@ class UsuariosSeeder extends Seeder
                 $usuario->save();
             }
 
-            if (Usuario::where('email', 'ramon@gmail.com')->doesntExist()) {
+            if (Usuario::where('email', 'rmc1@email.com')->doesntExist()) {
                 $usuario = new Usuario();
                 $usuario->nombre = 'Ramon';
                 $usuario->apellidos = 'Mendoza Candelario';
