@@ -1,16 +1,17 @@
-import { fetchUsuarios, fetchServicios } from "../api/adminApi";
+import { fetchUsuarios, fetchServicios, cambiarRolUsuario, eliminarUsuario } from "../api/adminApi";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { 
-    Pencil, 
-    Wifi, 
-    Smartphone, 
-    Tv, 
-    Plus, 
-    Users, 
-    ShieldCheck,
-    Search
+import {
+    Pencil,
+    Wifi,
+    Smartphone,
+    Tv,
+    Plus,
+    Users,
+    ShieldCheck
 } from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 export default function AdminComponent() {
     const [Usuarios, setUsuarios] = useState([]);
@@ -22,6 +23,8 @@ export default function AdminComponent() {
 
     const { token, usuario } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
+    const [mensaje, setMensaje] = useState(null);
+
 
     useEffect(() => {
         fetchUsuarios(token)
@@ -40,6 +43,44 @@ export default function AdminComponent() {
             )
             .finally(() => setLoading(false));
     }, [token]);
+
+    const cambiarRol = async (id) => {
+        try {
+            await cambiarRolUsuario(id, token);
+            // Mensaje global
+            localStorage.setItem("adminMessage", "Rol actualizado correctamente");
+            window.location.reload();
+        } catch (err) {
+            //alert("Hubo un error al cambiar el rol");
+            console.error(err);
+        }
+    };
+
+    const handleEliminarUsuario = async (id) => {
+        try {
+            await eliminarUsuario(id, token);
+            // Mensaje global
+            localStorage.setItem("adminMessage", "Usuario ELIMINADO correctamente");
+            window.location.reload();
+        } catch (err) {
+            //alert("Hubo un error al cambiar el rol");
+            console.error(err);
+        }
+    };
+
+    // Gestionar los mensajes
+    useEffect(() => {
+        const msg = localStorage.getItem("adminMessage");
+
+        if (msg) {
+            setMensaje(msg);
+
+            setTimeout(() => {
+                setMensaje(null);
+                localStorage.removeItem("adminMessage");
+            }, 5000);
+        }
+    }, []);
 
     const estadoDisponible = (estado) => (
         <span
@@ -63,6 +104,8 @@ export default function AdminComponent() {
         <div className="w-full min-h-screen bg-gray-50 pt-32 pb-20 font-sans">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
 
+
+
                 {/* HEADER DASHBOARD */}
                 <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
@@ -71,7 +114,7 @@ export default function AdminComponent() {
                         </h1>
                         <p className="text-gray-500 mt-1">Gestión integral de servicios y usuarios</p>
                     </div>
-                    
+
                     <div className="flex items-center gap-3 bg-blue-50 px-4 py-2 rounded-xl border border-blue-100">
                         <div className="bg-blue-600 text-white p-2 rounded-full">
                             <ShieldCheck size={20} />
@@ -86,9 +129,14 @@ export default function AdminComponent() {
                 </div>
 
                 {/* ================= SERVICIOS ================= */}
+                {mensaje && (
+                    <div className="bg-green-100 border border-green-300 text-green-800 px-6 py-4 rounded-xl shadow mb-6">
+                        {mensaje}
+                    </div>
+                )}
                 <section>
                     <div className="flex items-center gap-3 mb-6">
-                        <h2 className="text-2xl font-bold text-gray-800">Servicios</h2>            
+                        <h2 className="text-2xl font-bold text-gray-800">Servicios</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
@@ -101,11 +149,13 @@ export default function AdminComponent() {
                                     <Wifi size={24} />
                                     <h3 className="text-lg font-bold">Fibra Óptica</h3>
                                 </div>
-                                <button className="bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-lg transition backdrop-blur-sm">
+                                <Link
+                                    to="/anadir-opcion-fibra"
+                                    className="bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-lg transition backdrop-blur-sm">
                                     <Plus size={20} />
-                                </button>
+                                </Link>
                             </div>
-                            
+
                             <div className="p-0">
                                 <table className="w-full text-sm">
                                     <thead className="bg-blue-50 text-blue-800">
@@ -119,15 +169,23 @@ export default function AdminComponent() {
                                     <tbody className="divide-y divide-gray-100">
                                         {servicios.fibra.map((f) => (
                                             <tr key={f.id_fibra} className="hover:bg-gray-50 transition">
-                                                <td className="px-4 py-4 font-medium text-gray-700">{f.velocidad}</td>
+                                                <td className="px-4 py-4 font-medium text-gray-700">
+                                                    {f.velocidad < 1000
+                                                        ? `${f.velocidad} Mbps`
+                                                        : `${Math.floor(f.velocidad / 1000)} Gbps`}
+                                                </td>
                                                 <td className="px-4 py-4 text-blue-600 font-bold">{f.precio}€</td>
                                                 <td className="px-4 py-4 text-center">
                                                     {estadoDisponible(f.disponible)}
                                                 </td>
                                                 <td className="px-4 py-4 text-right">
-                                                    <button className="text-gray-400 hover:text-blue-600 transition bg-gray-50 p-2 rounded-full hover:bg-blue-50" title="Editar">
+                                                    <Link
+                                                        to={`/editar-opcion-fibra/${f.id_fibra}`}
+                                                        className="text-gray-400 hover:text-blue-600 transition bg-gray-50 p-2 rounded-full hover:bg-blue-50"
+                                                        title="Editar"
+                                                    >
                                                         <Pencil size={16} />
-                                                    </button>
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         ))}
@@ -144,9 +202,11 @@ export default function AdminComponent() {
                                     <Smartphone size={24} />
                                     <h3 className="text-lg font-bold">Móvil</h3>
                                 </div>
-                                <button className="bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-lg transition backdrop-blur-sm">
+                                <Link
+                                    to="/anadir-opcion-movil"
+                                    className="bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-lg transition backdrop-blur-sm">
                                     <Plus size={20} />
-                                </button>
+                                </Link>
                             </div>
 
                             <div className="p-0">
@@ -163,7 +223,13 @@ export default function AdminComponent() {
                                     <tbody className="divide-y divide-gray-100">
                                         {servicios.movil.map((m) => (
                                             <tr key={m.id_movil} className="hover:bg-gray-50 transition">
-                                                <td className="px-4 py-4 font-bold text-gray-700">{m.gb_datos} GB</td>
+                                                <td className="px-4 py-4 font-bold text-gray-700">
+                                                    {m.gb_datos === -1 ? (
+                                                        <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">∞ GB</span>
+                                                    ) : (
+                                                        `${m.gb_datos} GB`
+                                                    )}
+                                                </td>
                                                 <td className="px-4 py-4 text-gray-600">
                                                     {m.min_llamadas === -1 ? (
                                                         <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">∞ ILIM</span>
@@ -176,13 +242,14 @@ export default function AdminComponent() {
                                                     <div className="flex justify-end items-center gap-2">
                                                         {/* Indicador visual pequeño de estado si se desea ahorrar espacio */}
                                                         <div className={`w-2 h-2 rounded-full ${m.disponible ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                                        <button 
-                                                            className="text-gray-400 hover:text-green-600 transition bg-gray-50 p-2 rounded-full hover:bg-green-50" 
+                                                        <Link
+                                                            to={`/editar-opcion-movil/${m.id_movil}`}
+                                                            className="text-gray-400 hover:text-green-600 transition bg-gray-50 p-2 rounded-full hover:bg-green-50"
                                                             title="Editar"
                                                             onClick={() => console.log("Editar móvil", m)}
                                                         >
                                                             <Pencil size={16} />
-                                                        </button>
+                                                        </Link>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -200,9 +267,11 @@ export default function AdminComponent() {
                                     <Tv size={24} />
                                     <h3 className="text-lg font-bold">Televisión</h3>
                                 </div>
-                                <button className="bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-lg transition backdrop-blur-sm">
+                                <Link
+                                    to="/anadir-opcion-tv"
+                                    className="bg-white/20 hover:bg-white/30 text-white p-1.5 rounded-lg transition backdrop-blur-sm">
                                     <Plus size={20} />
-                                </button>
+                                </Link>
                             </div>
 
                             <div className="p-0">
@@ -224,9 +293,11 @@ export default function AdminComponent() {
                                                     {estadoDisponible(t.disponible)}
                                                 </td>
                                                 <td className="px-4 py-4 text-right">
-                                                    <button className="text-gray-400 hover:text-yellow-600 transition bg-gray-50 p-2 rounded-full hover:bg-yellow-50" title="Editar">
+                                                    <Link
+                                                        to={`/editar-opcion-tv/${t.id_tv}`}
+                                                        className="text-gray-400 hover:text-yellow-600 transition bg-gray-50 p-2 rounded-full hover:bg-yellow-50" title="Editar">
                                                         <Pencil size={16} />
-                                                    </button>
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         ))}
@@ -249,7 +320,7 @@ export default function AdminComponent() {
                             <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold">
                                 Total: {Usuarios.length}
                             </span>
-                        </div>                                                
+                        </div>
                     </div>
 
                     <div className="overflow-x-auto">
@@ -278,23 +349,26 @@ export default function AdminComponent() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide ${
-                                                u.rol === 'admin' 
-                                                ? 'bg-purple-100 text-purple-700 border border-purple-200' 
+                                            <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide ${u.rol === 'admin'
+                                                ? 'bg-purple-100 text-purple-700 border border-purple-200'
                                                 : 'bg-blue-100 text-blue-700 border border-blue-200'
-                                            }`}>
+                                                }`}>
                                                 {u.rol}
                                             </span>
                                         </td>
                                         {usuario.rol === "admin" && (
                                             <td className="px-6 py-4 text-right">
-                                                 {/* Solo mostrar acciones si no es el mismo admin (o lógica deseada) */}
+                                                {/* Solo mostrar acciones si no es el mismo admin (o lógica deseada) */}
                                                 {u.rol !== "admin" && (
                                                     <div className="flex justify-end gap-3  transition-opacity">
-                                                        <button className="text-blue-600 hover:text-blue-800 font-semibold hover:underline">
+                                                        <button
+                                                            onClick={() => cambiarRol(u.id_usuario)}
+                                                            className="text-blue-600 hover:text-blue-800 font-semibold hover:underline">
                                                             Rol
                                                         </button>
-                                                        <button className="text-red-500 hover:text-red-700 font-semibold hover:underline">
+                                                        <button
+                                                            onClick={() => handleEliminarUsuario(u.id_usuario)}
+                                                            className="text-red-500 hover:text-red-700 font-semibold hover:underline">
                                                             Eliminar
                                                         </button>
                                                     </div>

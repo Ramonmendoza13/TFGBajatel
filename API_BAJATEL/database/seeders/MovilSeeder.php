@@ -17,7 +17,7 @@ class MovilSeeder extends Seeder
         if (MovilOpcion::count() === 0) {
             if(MovilOpcion::where('id_movil', '1')->doesntExist()) {
                 $movil = new MovilOpcion();
-                $movil->gb_datos = '20GB';
+                $movil->gb_datos = 20;
                 $movil->min_llamadas = 120;
                 $movil->precio = 10;
                 $movil->disponible = true;
@@ -26,7 +26,7 @@ class MovilSeeder extends Seeder
 
             if(MovilOpcion::where('id_movil', '2')->doesntExist()) {
                 $movil = new MovilOpcion();
-                $movil->gb_datos = '100GB';
+                $movil->gb_datos = 100;
                 $movil->min_llamadas = -1; // Ilimitadas
                 $movil->precio = 15;
                 $movil->disponible = true;
@@ -35,7 +35,7 @@ class MovilSeeder extends Seeder
 
             if(MovilOpcion::where('id_movil', '3')->doesntExist()) {
                 $movil = new MovilOpcion();
-                $movil->gb_datos = 'Ilimitados';
+                $movil->gb_datos = -1;
                 $movil->min_llamadas = -1; // Ilimitadas
                 $movil->precio = 20;
                 $movil->disponible = true;

@@ -78,14 +78,18 @@ Route::middleware(['auth:sanctum', 'rol:gestor,admin'])->group(function () {
 
         // Fibra
         Route::post('/fibra', [FibraOpcionController::class, 'anadirOpcionFibra']);
+        Route::get('/fibra/{id}', [FibraOpcionController::class, 'mostrarOpcionFibra'])->whereNumber('id');
         Route::put('/fibra/{id}', [FibraOpcionController::class, 'editarOpcionFibra'])->whereNumber('id');
 
         // TV
         Route::post('/tv', [TVOpcionController::class, 'anadirOpcionTV']);
+        Route::get('/tv/{id}', [TvOpcionController::class, 'mostrarOpcionTv'])->whereNumber('id');
+
         Route::put('/tv/{id}', [TVOpcionController::class, 'editarOpcionTV'])->whereNumber('id');
 
         // Móvil
         Route::post('/movil', [MovilOpcionController::class, 'anadirOpcionMovil']);
+        Route::get('/movil/{id}', [MovilOpcionController::class, 'mostrarOpcionMovil'])->whereNumber('id');
         Route::put('/movil/{id}', [MovilOpcionController::class, 'editarOpcionMovil'])->whereNumber('id');
 
         // Mostrar todo (sin filtrar por disponibilidad)

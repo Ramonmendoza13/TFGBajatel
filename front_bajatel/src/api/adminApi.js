@@ -19,3 +19,30 @@ export const fetchServicios = async (token) => {
     });
     return data; // data = [servicios]
 }
+
+// Cambiar ROL de Usuario (Si es cliente asciende a gestor y si es gestor desciende usario, ADMIN no puede ser modificado)
+export const cambiarRolUsuario = async (id, token) => {
+    const { data } = await axiosClient.put(
+        `/usuario/${id}/gestionarRol`,
+        null, // body vacío
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    return data;
+};
+
+//Eliminar usuario
+export const eliminarUsuario = async (id, token) => {
+    const { data } = await axiosClient.delete(
+        `/usuario/${id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    return data;
+};

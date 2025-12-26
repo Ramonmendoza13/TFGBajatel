@@ -14,11 +14,13 @@ class TVOpcionController extends Controller
     {
         $request->validate([
             'nombre_paquete' => 'required|string|max:255',
+            'disponible' => 'required|boolean',
             'precio' => 'required|numeric|min:0',
         ]);
 
         $tvOpcion = new TvOpcion();
         $tvOpcion->nombre_paquete = $request->nombre_paquete;
+        $tvOpcion->disponible = $request->disponible;
         $tvOpcion->precio = $request->precio;
         $tvOpcion->save();
 
@@ -26,6 +28,24 @@ class TVOpcionController extends Controller
             'mensaje' => 'Opción de TV añadida correctamente',
             'datos' => $tvOpcion,
         ], 201);
+    }
+    /**
+     * Mostrar los datos de una opción de TV existente.
+     */
+    public function mostrarOpcionTv($id)
+    {
+        $tvOpcion = TvOpcion::find($id);
+
+        if (!$tvOpcion) {
+            return response()->json([
+                'mensaje' => 'Opción de TV no encontrada',
+            ], 404);
+        }
+
+        return response()->json([
+            'mensaje' => 'Opción de TV encontrada',
+            'datos' => $tvOpcion,
+        ], 200);
     }
     /**
      * Eliminar una opcion de TV por su ID

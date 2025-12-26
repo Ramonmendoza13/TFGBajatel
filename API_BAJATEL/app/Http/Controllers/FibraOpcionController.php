@@ -12,14 +12,18 @@ class FibraOpcionController extends Controller
     {
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'velocidad' => 'required|string|max:255',
+            'velocidad' => 'required|numeric|max:255',
             'precio' => 'required|numeric',
+            'disponible' => 'sometimes|required|boolean', // Por defecto true
         ]);
 
         // Crear una nueva opción de fibra
         $fibraOpcion = new FibraOpcion();
         $fibraOpcion->velocidad = $validatedData['velocidad'];
         $fibraOpcion->precio = $validatedData['precio'];
+        if (isset($validatedData['disponible'])) {
+            $fibraOpcion->disponible = $validatedData['disponible'];
+        }
         $fibraOpcion->save();
 
         return response()->json([
@@ -47,6 +51,28 @@ class FibraOpcionController extends Controller
     }
 
     /**
+     * Mostrar los datos de una opción de fibra existente.
+     */
+    public function mostrarOpcionFibra($id)
+    {
+        // Buscar la opción de fibra por ID
+        $fibraOpcion = FibraOpcion::find($id);
+
+        // Si no existe, devolver error 404
+        if (!$fibraOpcion) {
+            return response()->json([
+                'mensaje' => 'Opción de fibra no encontrada',
+            ], 404);
+        }
+
+        // Devolver los datos de la opción de fibra
+        return response()->json([
+            'mensaje' => 'Opción de fibra encontrada',
+            'datos' => $fibraOpcion,
+        ], 200);
+    }
+
+    /**
      * Editar una opción de fibra existente.
      */
     public function editarOpcionFibra(Request $request, $id)
@@ -60,10 +86,11 @@ class FibraOpcionController extends Controller
         }
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'velocidad' => 'sometimes|required|string|max:255',
-            'precio' => 'sometimes|required|numeric',
-            'disponible' => 'sometimes|required|boolean',
+            'velocidad' => 'sometimes|numeric|max:10000',  
+            'precio' => 'sometimes|numeric',
+            'disponible' => 'sometimes|boolean',
         ]);
+
         // Actualizar los campos si están presentes en la solicitud
         if (isset($validatedData['velocidad'])) {
             $fibraOpcion->velocidad = $validatedData['velocidad'];

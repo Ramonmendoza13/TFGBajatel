@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('fibra_opciones', function (Blueprint $table) {
             $table->increments('id_fibra');
-            $table->string('velocidad');
+            $table->integer('velocidad');
             $table->decimal('precio', 8, 2);
             $table->boolean('disponible')->default(true);
             $table->timestamps();
