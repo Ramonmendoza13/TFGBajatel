@@ -18,14 +18,14 @@ class MovilesContratadosSeeder extends Seeder
         if(LineaMovilContratada::count() == 0) {
             if(LineaMovilContratada::where('id_linea', '1')->doesntExist()) {
                 $linea1 = new LineaMovilContratada();
-                $linea1->numero = '655 66 77 88';
+                $linea1->numero = '655667788';
                 $linea1->id_servicio = 1;
                 $linea1->id_movil = 1;
                 $linea1->save();
             }
             if(LineaMovilContratada::where('id_linea', '2')->doesntExist()) {
                 $linea2 = new LineaMovilContratada();
-                $linea2->numero = '611 22 33 44';
+                $linea2->numero = '611223344';
                 $linea2->id_servicio = 2;
                 $linea2->id_movil = 2;
                 $linea2->save();

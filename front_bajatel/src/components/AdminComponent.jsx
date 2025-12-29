@@ -330,6 +330,9 @@ export default function AdminComponent() {
                                     <th className="px-6 py-4 text-left font-bold">ID</th>
                                     <th className="px-6 py-4 text-left font-bold">Usuario</th>
                                     <th className="px-6 py-4 text-left font-bold">Rol</th>
+                                    <th className="px-6 py-4 text-left font-bold">Servicios contratados</th>
+                                    <th className="px-6 py-4 text-left font-bold">Fecha contratación</th>
+                                    <th className="px-6 py-4 text-left font-bold">Precio total</th>
                                     {usuario.rol === "admin" && (
                                         <th className="px-6 py-4 text-right font-bold">Acciones</th>
                                     )}
@@ -341,34 +344,103 @@ export default function AdminComponent() {
                                         key={u.id_usuario}
                                         className="hover:bg-blue-50/30 transition group"
                                     >
-                                        <td className="px-6 py-4 text-gray-400 font-mono text-xs">#{u.id_usuario}</td>
+                                        {/* ID */}
+                                        <td className="px-6 py-4 text-gray-400 font-mono text-xs">
+                                            #{u.id_usuario}
+                                        </td>
+
+                                        {/* Usuario */}
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
-                                                <span className="font-semibold text-gray-800 text-base">{u.nombre} {u.apellidos}</span>
+                                                <span className="font-semibold text-gray-800 text-base">
+                                                    {u.nombre} {u.apellidos}
+                                                </span>
                                                 <span className="text-gray-500 text-xs">{u.email}</span>
                                             </div>
                                         </td>
+
+                                        {/* Rol */}
                                         <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide ${u.rol === 'admin'
-                                                ? 'bg-purple-100 text-purple-700 border border-purple-200'
-                                                : 'bg-blue-100 text-blue-700 border border-blue-200'
-                                                }`}>
+                                            <span
+                                                className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wide ${u.rol === "admin"
+                                                    ? "bg-purple-100 text-purple-700 border border-purple-200"
+                                                    : "bg-blue-100 text-blue-700 border border-blue-200"
+                                                    }`}
+                                            >
                                                 {u.rol}
                                             </span>
                                         </td>
+
+                                        {/* Servicios contratados / Dirección */}
+                                        <td className="px-6 py-4">
+                                            {u.contrato?.servicios?.length > 0 ? (
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    {u.contrato.servicios.map((servicio) => (
+                                                        <div key={servicio.id_servicio} className="flex flex-wrap gap-2">
+
+                                                            {/* Fibra - Estilo Azul Suave */}
+                                                            {servicio.fibra && (
+                                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                                                    <Wifi size={12} className="text-blue-600" />
+                                                                    {servicio.fibra.velocidad} Mbps
+                                                                </span>
+                                                            )}
+
+                                                            {/* Líneas móviles - Estilo Esmeralda */}
+                                                            {servicio.lineas?.length > 0 && (
+                                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                                    <Smartphone size={12} className="text-emerald-600" />
+                                                                    {servicio.lineas.length} {servicio.lineas.length === 1 ? 'línea' : 'líneas'}
+                                                                </span>
+                                                            )}
+
+                                                            {/* TV - Estilo Ámbar/Naranja */}
+                                                            {servicio.tv && (
+                                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                                                    <Tv size={12} className="text-amber-600" />
+                                                                    <span className="max-w-[100px] truncate">{servicio.tv.nombre_paquete}</span>
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-50 text-gray-500 border border-gray-200">
+                                                    Sin servicios
+                                                </span>
+                                            )}
+                                        </td>
+
+
+                                        {/* Fecha contratación */}
+                                        <td className="px-6 py-4 text-gray-600">
+                                            {u.contrato ? (
+                                                new Date(u.contrato.fecha_alta).toLocaleDateString()
+                                            ) : (
+                                                "-"
+                                            )}
+                                        </td>
+
+                                        {/* Precio total */}
+                                        <td className="px-6 py-4 font-bold text-green-600">
+                                            {u.contrato ? `${u.contrato.precio_total} € / mes` : "-"}
+                                        </td>
+
+                                        {/* Acciones */}
                                         {usuario.rol === "admin" && (
                                             <td className="px-6 py-4 text-right">
-                                                {/* Solo mostrar acciones si no es el mismo admin (o lógica deseada) */}
                                                 {u.rol !== "admin" && (
-                                                    <div className="flex justify-end gap-3  transition-opacity">
+                                                    <div className="flex justify-end gap-3">
                                                         <button
                                                             onClick={() => cambiarRol(u.id_usuario)}
-                                                            className="text-blue-600 hover:text-blue-800 font-semibold hover:underline">
+                                                            className="text-blue-600 hover:text-blue-800 font-semibold hover:underline"
+                                                        >
                                                             Rol
                                                         </button>
                                                         <button
                                                             onClick={() => handleEliminarUsuario(u.id_usuario)}
-                                                            className="text-red-500 hover:text-red-700 font-semibold hover:underline">
+                                                            className="text-red-500 hover:text-red-700 font-semibold hover:underline"
+                                                        >
                                                             Eliminar
                                                         </button>
                                                     </div>
@@ -376,6 +448,7 @@ export default function AdminComponent() {
                                             </td>
                                         )}
                                     </tr>
+
                                 ))}
                             </tbody>
                         </table>

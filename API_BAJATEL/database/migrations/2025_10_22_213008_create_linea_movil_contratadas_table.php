@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('lineas_movil_contratadas', function (Blueprint $table) {
             $table->increments('id_linea');
 
-            $table->string('numero', 15);
+            $table->string('numero', 9)->unique();
             $table->unsignedInteger('id_servicio');
             $table->unsignedInteger('id_movil');
 

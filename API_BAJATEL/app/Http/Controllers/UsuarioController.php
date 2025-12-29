@@ -182,10 +182,15 @@ class UsuarioController extends Controller
      */
     public function listarUsuariosConContratos()
     {
-        $usuarios = Usuario::with('contrato')->get();
+        $usuarios = Usuario::with([
+            'contrato.servicios.fibra',
+            'contrato.servicios.tv',
+            'contrato.servicios.lineas.movilOpcion',
+        ])->get();
 
         return response()->json($usuarios, 200);
     }
+
 
     /**
      * Gestionar el rol de un usuario (solo para administradores)

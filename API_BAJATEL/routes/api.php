@@ -53,11 +53,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/cancelar', [ContratoController::class, 'cancelar']);
         Route::get('/mostrar', [ContratoController::class, 'mostrar']);
 
-        // Servicios asociados a contratos
-        Route::post('/anadirServicioFibra/{id}', [ContratoServicioController::class, 'anadirServicioFibra'])->whereNumber('id');
-        Route::post('/anadirServicioTV/{id}', [ContratoServicioController::class, 'anadirServicioTV'])->whereNumber('id');
-        Route::post('/anadirLineaMovil/{id}', [ContratoServicioController::class, 'anadirLineaMovil'])->whereNumber('id');
+        // --- SERVICIOS (FIBRA Y TV) ---
+        // POST para crear, PUT para actualizar (apuntan al mismo método "Upsert")
+        Route::match(['post', 'put'], '/anadirServicioFibra/{id}', [ContratoServicioController::class, 'anadirServicioFibra'])->whereNumber('id');
+        Route::match(['post', 'put'], '/anadirServicioTV/{id}', [ContratoServicioController::class, 'anadirServicioTV'])->whereNumber('id');
 
+        // --- LÍNEAS MÓVILES ---
+        Route::post('/anadirLineaMovil/{id}', [ContratoServicioController::class, 'anadirLineaMovil'])->whereNumber('id');
+        Route::put('/actualizarLineaMovil/{id}', [ContratoServicioController::class, 'actualizarLineaMovil'])->whereNumber('id');
+
+        // --- ELIMINAR SERVICIOS ---
         Route::delete('/eliminarServicioFibra', [ContratoServicioController::class, 'eliminarServicioFibra']);
         Route::delete('/eliminarServicioTV', [ContratoServicioController::class, 'eliminarServicioTV']);
         Route::delete('/eliminarLineaMovil', [ContratoServicioController::class, 'eliminarLineaMovil']);
@@ -105,6 +110,6 @@ Route::middleware(['auth:sanctum', 'rol:gestor,admin'])->group(function () {
 */
 Route::middleware(['auth:sanctum', 'rol:admin'])->group(function () {
     //  Gestión de usuarios, cambio de rol aun usario(Si es cliente asciende a gestor y si es gestor desciende usario, ADMIN no puede ser modificado)
-    Route::put('/usuario/{id}/gestionarRol', [UsuarioController::class, 'gestionarRol'])->whereNumber('id'); 
+    Route::put('/usuario/{id}/gestionarRol', [UsuarioController::class, 'gestionarRol'])->whereNumber('id');
     Route::delete('/usuario/{id}', [UsuarioController::class, 'eliminarUsuario'])->whereNumber('id');
 });

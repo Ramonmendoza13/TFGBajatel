@@ -129,16 +129,16 @@ class ContratoServicioController extends Controller
         ], 200);
     }
     /**
-     * Añadir o actualizar una línea móvil al contrato del usuario autenticado.
+     * Añadir una línea móvil al contrato del usuario autenticado.
      */
     public function anadirLineaMovil(Request $request, $id_opcion_movil)
     {
-        // Validar el número
+        // 1️⃣ Validación (el número es opcional)
         $request->validate([
-            'numero_telefono' => 'required|string|max:9',
+            'numero_telefono' => 'nullable|string|size:9',
         ]);
 
-        // Encontrar el contrato del usuario autenticado
+        // 2️⃣ Obtener contrato del usuario autenticado
         $contratoUsuario = $request->user()->contrato;
 
         if (!$contratoUsuario) {
@@ -147,30 +147,42 @@ class ContratoServicioController extends Controller
             ], 404);
         }
 
-        // Obtener el ContratoServicio asociado
-        $contratoServicio = ContratoServicio::where('id_contrato', $contratoUsuario->id_contrato)->first();
+        // 3️⃣ Obtener el servicio asociado al contrato
+        $contratoServicio = ContratoServicio::where(
+            'id_contrato',
+            $contratoUsuario->id_contrato
+        )->first();
+
         if (!$contratoServicio) {
             return response()->json([
                 'mensaje' => 'No hay servicios asociados a este contrato.',
             ], 404);
         }
 
-        // Crear o actualizar la línea móvil
-        $lineaMovil = LineaMovilContratada::updateOrCreate(
-            // Condición para buscar si ya existe esa línea
-            ['numero' => $request->input('numero_telefono')],
-            // Campos a actualizar o crear
-            [
-                'id_servicio' => $contratoServicio->id_servicio,
-                'id_movil' => $id_opcion_movil,
-            ]
-        );
+        // 4️⃣ Obtener o generar número de teléfono
+        $numero = $request->input('numero_telefono');
 
+        if (!$numero) {
+            do {
+                // Móvil español (empieza por 6)
+                $numero = '6' . random_int(10000000, 99999999);
+            } while (
+                LineaMovilContratada::where('numero', $numero)->exists()
+            );
+        }
+
+        // 5️⃣ Crear la línea móvil (siempre nueva)
+        $lineaMovil = LineaMovilContratada::create([
+            'numero' => $numero,
+            'id_servicio' => $contratoServicio->id_servicio,
+            'id_movil' => $id_opcion_movil,
+        ]);
+
+        // 6️⃣ Respuesta
         return response()->json([
-            'mensaje' => $lineaMovil->wasRecentlyCreated
-                ? 'Línea móvil añadida correctamente al contrato ' . $contratoUsuario->id_contrato
-                : 'Línea móvil actualizada correctamente en el contrato ' . $contratoUsuario->id_contrato,
-        ], 200);
+            'mensaje' => 'Línea móvil añadida correctamente al contrato ' . $contratoUsuario->id_contrato,
+            'numero_generado' => $numero,
+        ], 201);
     }
     /**
      * Eliminar una línea móvil del contrato del usuario autenticado.
@@ -182,8 +194,8 @@ class ContratoServicioController extends Controller
             'numero_telefono' => 'required|string|max:9',
         ]);
 
-        $telefono = $request->input('numero_telefono'); 
-    
+        $telefono = $request->input('numero_telefono');
+
         // Encontrar el contrato del usuario autenticado
         $contratoUsuario = $request->user()->contrato;
         if (!$contratoUsuario) {
@@ -214,6 +226,49 @@ class ContratoServicioController extends Controller
 
         return response()->json([
             'mensaje' => 'Línea móvil eliminada correctamente del contrato ' . $contratoUsuario->id_contrato,
+        ], 200);
+    }
+
+    /**
+     * Actualizar la tarifa de una línea móvil existente.
+     * Recibe el ID de la nueva tarifa en la URL y el número de teléfono en el body.
+     */
+    public function actualizarLineaMovil(Request $request, $id_nueva_tarifa)
+    {
+        // 1. Validamos que nos envíen el número que queremos modificar
+        $request->validate([
+            'numero_telefono' => 'required|string|size:9',
+        ]);
+
+        $telefono = $request->input('numero_telefono');
+        $contratoUsuario = $request->user()->contrato;
+
+        if (!$contratoUsuario) {
+            return response()->json(['mensaje' => 'Sin contrato.'], 404);
+        }
+
+        // 2. Buscamos el servicio general del contrato (para asegurarnos que la línea es de este contrato)
+        $contratoServicio = ContratoServicio::where('id_contrato', $contratoUsuario->id_contrato)->first();
+
+        if (!$contratoServicio) {
+            return response()->json(['mensaje' => 'Error de integridad en contrato.'], 404);
+        }
+
+        // 3. Buscamos la línea específica por su número Y que pertenezca al servicio del usuario
+        $linea = LineaMovilContratada::where('numero', $telefono)
+            ->where('id_servicio', $contratoServicio->id_servicio)
+            ->first();
+
+        if (!$linea) {
+            return response()->json(['mensaje' => 'La línea ' . $telefono . ' no pertenece a tu contrato.'], 404);
+        }
+
+        // 4. Actualizamos la tarifa
+        $linea->id_movil = $id_nueva_tarifa;
+        $linea->save();
+
+        return response()->json([
+            'mensaje' => 'Tarifa actualizada correctamente para la línea ' . $telefono
         ], 200);
     }
 }

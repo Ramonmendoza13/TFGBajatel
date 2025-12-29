@@ -18,7 +18,6 @@ export const logoutRequest = async (token) => {
     return data;
 };
 
-// authApi.js
 export const editarPerfil = async (email, passwordActual, passwordNueva = "", token) => {
     const data = {
         email,
@@ -44,3 +43,15 @@ export const editarPerfil = async (email, passwordActual, passwordNueva = "", to
     }
 };
 
+export const eliminarCuenta = async (token) => {
+    try {
+        const response = await axiosClient.delete("/usuario/eliminarCuenta", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

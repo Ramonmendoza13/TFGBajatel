@@ -13,7 +13,8 @@ import AnadirOpcionMovilPage from "./pages/AnadirOpcionMovilPage";
 import EditarOpcionMovilPage from "./pages/EditarOpcionMovilPage";
 import AnadirOpcionTvPage from "./pages/AnadirOpcionTvPage";
 import EditarOpcionTvPage from "./pages/EditarOpcionTvPage";
-
+import ContratarPage from "./pages/ContratarPage";
+import EditarContratoPage from "./pages/EditarContratoPage";
 
 
 const App = () => {
@@ -112,6 +113,22 @@ const App = () => {
         element={
           <Layout>
             <EditarOpcionTvPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/contratar"
+        element={
+          <Layout>
+            <ContratarPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/editar-contrato"
+        element={
+          <Layout>
+            <EditarContratoPage />
           </Layout>
         }
       />

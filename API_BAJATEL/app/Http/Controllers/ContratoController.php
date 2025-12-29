@@ -16,23 +16,36 @@ class ContratoController extends Controller
      */
     public function crear(Request $request)
     {
+        $usuarioId = $request->user()->id_usuario;
+
+        // Comprobar si el usuario ya tiene un contrato
+        $contratoExistente = Contrato::where('id_usuario', $usuarioId)->first();
+        if ($contratoExistente) {
+            return response()->json([
+                'error' => 'El usuario ya tiene un contrato activo.'
+            ], 400);
+        }
+
         // Validación de datos
         $datos = $request->validate([
             'iban' => 'required|string|max:34|unique:contratos,IBAN',
             'calle_y_n' => 'required|string|max:255',
             'ciudad' => 'required|string|max:100',
             'provincia' => 'required|string|max:100',
+            'codigo_postal' => 'required|digits:5',
         ]);
+
+        // Crear el contrato
         $contrato = Contrato::create([
             'fecha_alta' => now(),
-            'precio_total' => 0, // Se actualizará al añadir servicios
+            'precio_total' => 0,
             'IBAN' => $datos['iban'],
             'calle_y_n' => $datos['calle_y_n'],
             'ciudad' => $datos['ciudad'],
             'provincia' => $datos['provincia'],
-            'id_usuario' => $request->user()->id_usuario, // Asignar al usuario autenticado
+            'codigo_postal' => $datos['codigo_postal'],
+            'id_usuario' => $usuarioId,
         ]);
-        $contrato->save();
 
         return response()->json([
             'mensaje' => 'Contrato creado correctamente.',
@@ -47,26 +60,32 @@ class ContratoController extends Controller
     {
         $id_usuario = $request->user()->id_usuario;
         $contrato = Contrato::where('id_usuario', $id_usuario)->first();
+
         if (!$contrato) {
-            return response()->json([
-                'mensaje' => 'Contrato no encontrado.',
-            ], 404);
+            return response()->json(['mensaje' => 'Contrato no encontrado.'], 404);
         }
-        // Verificar que el contrato pertenece al usuario autenticado
-        if ($contrato->id_usuario !== $request->user()->id_usuario) {
-            return response()->json([
-                'mensaje' => 'No autorizado para actualizar este contrato.',
-            ], 403);
-        }
+
         // Validación de datos
+        // IMPORTANTE: Asegúrate de que 'codigo_postal' esté incluido en la validación si se envía
         $datos = $request->validate([
+            // Excluir el contrato actual de la comprobación 'unique' para el IBAN
             'iban' => 'sometimes|string|max:34|unique:contratos,IBAN,' . $contrato->id_contrato . ',id_contrato',
             'calle_y_n' => 'sometimes|string|max:255',
             'ciudad' => 'sometimes|string|max:100',
             'provincia' => 'sometimes|string|max:100',
+            'codigo_postal' => 'sometimes|digits:5', // FALTABA ESTA VALIDACIÓN o no estaba explícita
         ]);
-        // Actualizar campos
-        $contrato->update($datos);
+
+        // Mapeo manual para asegurar que los nombres coincidan con la BD
+        // Si tu modelo tiene $fillable, esto se hace automático, pero a veces es mejor ser explícito
+        $datosAActualizar = [];
+        if (isset($datos['iban'])) $datosAActualizar['IBAN'] = $datos['iban']; // Mapeo iban -> IBAN
+        if (isset($datos['calle_y_n'])) $datosAActualizar['calle_y_n'] = $datos['calle_y_n'];
+        if (isset($datos['ciudad'])) $datosAActualizar['ciudad'] = $datos['ciudad'];
+        if (isset($datos['provincia'])) $datosAActualizar['provincia'] = $datos['provincia'];
+        if (isset($datos['codigo_postal'])) $datosAActualizar['codigo_postal'] = $datos['codigo_postal'];
+
+        $contrato->update($datosAActualizar);
 
         return response()->json([
             'mensaje' => 'Contrato actualizado correctamente.',

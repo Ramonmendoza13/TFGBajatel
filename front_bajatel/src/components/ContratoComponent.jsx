@@ -112,87 +112,96 @@ function ContratoComponent() {
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 py-6 bg-white">
 
                                         {/* FIBRA */}
-                                        <div className="rounded-xl border border-blue-600 shadow-sm hover:shadow-lg transition bg-white">
-                                            <div className="bg-blue-600 text-white py-4 flex flex-col items-center rounded-t-xl">
-                                                <Wifi size={28} />
-                                                <span className="font-semibold mt-1">Fibra Óptica</span>
+                                        {servicios?.fibra && (
+                                            <div className="rounded-xl border border-blue-600 shadow-sm hover:shadow-lg transition bg-white">
+                                                <div className="bg-blue-600 text-white py-4 flex flex-col items-center rounded-t-xl">
+                                                    <Wifi size={28} />
+                                                    <span className="font-semibold mt-1">Fibra Óptica</span>
+                                                </div>
+                                                <div className="p-5 text-center">
+                                                    <p className="text-3xl font-extrabold text-blue-700">
+                                                        {servicios.fibra.velocidad}
+                                                    </p>
+                                                    <p className="text-gray-700 mt-1">
+                                                        <span className="text-green-700 font-bold text-2xl">
+                                                            {servicios.fibra.precio}€
+                                                        </span>
+                                                        <span className="text-gray-500 text-xl"> /mes</span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="p-5 text-center">
-                                                <p className="text-3xl font-extrabold text-blue-700">
-                                                    {servicios.fibra.velocidad}
-                                                </p>
-                                                <p className="text-gray-700 mt-1">
-                                                    <span className="text-green-700 font-bold text-2xl">{servicios.fibra.precio}€</span>
-                                                    <span className="text-gray-500 text-xl"> /mes</span>
-                                                </p>
-                                            </div>
-                                        </div>
+                                        )}
 
                                         {/* LÍNEAS MÓVILES */}
-                                        <div className="rounded-xl border border-green-600 shadow-sm hover:shadow-lg transition bg-white">
-                                            <div className="bg-green-600 text-white py-4 flex flex-col items-center rounded-t-xl">
-                                                <Smartphone size={28} />
-                                                <span className="font-semibold text-xl">Líneas Móviles</span>
-                                            </div>
-
-                                            <div className="px-6 py-4 text-sm">
-
-                                                <div className="grid grid-cols-4 font-semibold text-gray-700 mb-3 text-base border-b pb-2">
-                                                    <span className="text-center">Teléfono</span>
-                                                    <span className="text-center">Datos</span>
-                                                    <span className="text-center">Llamadas</span>
-                                                    <span className="text-center">Precio</span>
+                                        {servicios.lineas && servicios.lineas.length > 0 && (
+                                            <div className="rounded-xl border border-green-600 shadow-sm hover:shadow-lg transition bg-white">
+                                                <div className="bg-green-600 text-white py-4 flex flex-col items-center rounded-t-xl">
+                                                    <Smartphone size={28} />
+                                                    <span className="font-semibold text-xl">Líneas Móviles</span>
                                                 </div>
 
-                                                {servicios.lineas.map((linea) => (
-                                                    <div
-                                                        key={linea.id_linea}
-                                                        className="grid grid-cols-4 items-center py-2 border-b last:border-b-0"
-                                                    >
-                                                        <span className="flex justify-center items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
-                                                            <Smartphone size={16} className="text-blue-600" />
-                                                            {linea.numero}
-                                                        </span>
+                                                <div className="px-6 py-4 text-sm">
 
-                                                        <span className="flex justify-center">
-                                                            <span className="bg-cyan-500 text-white px-2 py-1.5 rounded-full text-xs font-bold text-center whitespace-nowrap">
-                                                                {linea.movil_opcion.gb_datos} GB
-                                                            </span>
-                                                        </span>
-
-                                                        <span className="flex justify-center">
-                                                            <span className="bg-gray-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold text-center whitespace-nowrap">
-                                                                {linea.movil_opcion.min_llamadas}
-                                                            </span>
-                                                        </span>
-
-                                                        <span className="text-green-700 font-semibold text-center whitespace-nowrap">
-                                                            {linea.movil_opcion.precio}€
-                                                        </span>
+                                                    <div className="grid grid-cols-4 font-semibold text-gray-700 mb-3 text-base border-b pb-2">
+                                                        <span className="text-center">Teléfono</span>
+                                                        <span className="text-center">Datos</span>
+                                                        <span className="text-center">Llamadas</span>
+                                                        <span className="text-center">Precio</span>
                                                     </div>
-                                                ))}
 
+                                                    {servicios.lineas.map((linea) => (
+                                                        <div
+                                                            key={linea.id_linea}
+                                                            className="grid grid-cols-4 items-center py-2 border-b last:border-b-0"
+                                                        >
+                                                            <span className="flex justify-center items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
+                                                                <Smartphone size={16} className="text-blue-600" />
+                                                                {linea.numero}
+                                                            </span>
+
+                                                            <span className="flex justify-center">
+                                                                <span className="bg-cyan-500 text-white px-2 py-1.5 rounded-full text-xs font-bold text-center whitespace-nowrap">
+                                                                    {linea.movil_opcion.gb_datos} GB
+                                                                </span>
+                                                            </span>
+
+                                                            <span className="flex justify-center">
+                                                                <span className="bg-gray-700 text-white px-4 py-1.5 rounded-full text-xs font-semibold text-center whitespace-nowrap">
+                                                                    {linea.movil_opcion.min_llamadas}
+                                                                </span>
+                                                            </span>
+
+                                                            <span className="text-green-700 font-semibold text-center whitespace-nowrap">
+                                                                {linea.movil_opcion.precio}€
+                                                            </span>
+                                                        </div>
+                                                    ))}
+
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
+
 
                                         {/* TV */}
-                                        <div className="rounded-xl border border-yellow-400 shadow-sm hover:shadow-lg transition bg-white">
-                                            <div className="bg-yellow-400 text-black py-4 flex flex-col items-center rounded-t-xl">
-                                                <Tv size={28} />
-                                                <span className="font-semibold mt-1">Televisión</span>
-                                            </div>
+                                        {servicios?.tv && (
 
-                                            <div className="p-5 text-center">
-                                                <p className="text-3xl font-extrabold text-yellow-400 ">
-                                                    {servicios.tv.nombre_paquete}
-                                                </p>
-                                                <p className="mt-1">
-                                                    <span className="text-green-700 font-bold text-2xl">{servicios.tv.precio}€</span>
-                                                    <span className="text-gray-500 text-xl"> /mes</span>
-                                                </p>
-                                            </div>
-                                        </div>
+                                            <div className="rounded-xl border border-yellow-400 shadow-sm hover:shadow-lg transition bg-white">
+                                                <div className="bg-yellow-400 text-black py-4 flex flex-col items-center rounded-t-xl">
+                                                    <Tv size={28} />
+                                                    <span className="font-semibold mt-1">Televisión</span>
+                                                </div>
 
+                                                <div className="p-5 text-center">
+                                                    <p className="text-3xl font-extrabold text-yellow-400 ">
+                                                        {servicios.tv.nombre_paquete}
+                                                    </p>
+                                                    <p className="mt-1">
+                                                        <span className="text-green-700 font-bold text-2xl">{servicios.tv.precio}€</span>
+                                                        <span className="text-gray-500 text-xl"> /mes</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* PRECIO TOTAL */}

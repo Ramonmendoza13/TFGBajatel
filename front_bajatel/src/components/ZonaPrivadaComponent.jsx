@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect  } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { logoutRequest } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 function ZonaPrivadaComponent() {
   const { token, usuario, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [mensaje, setMensaje] = useState(null);
 
   const handleLogout = async () => {
     try {
@@ -20,8 +21,28 @@ function ZonaPrivadaComponent() {
     }
   };
 
+  // Gestionar los mensajes
+  useEffect(() => {
+    const msg = localStorage.getItem("adminMessage");
+
+    if (msg) {
+      setMensaje(msg);
+
+      setTimeout(() => {
+        setMensaje(null);
+        localStorage.removeItem("adminMessage");
+      }, 5000);
+    }
+  }, []);
+
   return (
     <div className="w-full bg-white pt-28 pb-16">
+
+      {mensaje && (
+        <div className="bg-green-100 border border-green-300 text-green-800 px-6 py-4 rounded-xl shadow mb-6">
+          {mensaje}
+        </div>
+      )}
 
       {usuario && (
         <div className="max-w-7xl mx-auto mb-8 flex items-center gap-4">
@@ -44,7 +65,7 @@ function ZonaPrivadaComponent() {
             </Link>
             {/* ------------------------------------------- */}
           </div>
-          {usuario.rol === "admin" && (
+          {(usuario.rol === "admin" || usuario.rol === "gestor") && (
             <Link
               to="/admin"
               className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-600 font-semibold text-sm rounded-md border border-green-300 hover:bg-green-200 transition whitespace-nowrap"
