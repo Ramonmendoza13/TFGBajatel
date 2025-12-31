@@ -69,7 +69,7 @@ function LoginComponent() {
                         </div>
                     </form>
                     <div className="mt-6 text-center">
-                        <Link to="/register" className="text-blue-600 hover:underline">Crear una cuenta nueva</Link>
+                        <Link to="/registro" className="text-blue-600 hover:underline">Crear una cuenta nueva</Link>
                     </div>
                 </div>
             </div>

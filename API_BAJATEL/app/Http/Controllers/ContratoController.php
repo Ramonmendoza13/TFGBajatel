@@ -28,7 +28,7 @@ class ContratoController extends Controller
 
         // Validación de datos
         $datos = $request->validate([
-            'iban' => 'required|string|max:34|unique:contratos,IBAN',
+            'iban' => 'required|string|max:29|min:29|unique:contratos,IBAN',
             'calle_y_n' => 'required|string|max:255',
             'ciudad' => 'required|string|max:100',
             'provincia' => 'required|string|max:100',
@@ -75,11 +75,9 @@ class ContratoController extends Controller
             'provincia' => 'sometimes|string|max:100',
             'codigo_postal' => 'sometimes|digits:5', // FALTABA ESTA VALIDACIÓN o no estaba explícita
         ]);
-
-        // Mapeo manual para asegurar que los nombres coincidan con la BD
-        // Si tu modelo tiene $fillable, esto se hace automático, pero a veces es mejor ser explícito
+        
         $datosAActualizar = [];
-        if (isset($datos['iban'])) $datosAActualizar['IBAN'] = $datos['iban']; // Mapeo iban -> IBAN
+        if (isset($datos['iban'])) $datosAActualizar['IBAN'] = $datos['iban'];
         if (isset($datos['calle_y_n'])) $datosAActualizar['calle_y_n'] = $datos['calle_y_n'];
         if (isset($datos['ciudad'])) $datosAActualizar['ciudad'] = $datos['ciudad'];
         if (isset($datos['provincia'])) $datosAActualizar['provincia'] = $datos['provincia'];

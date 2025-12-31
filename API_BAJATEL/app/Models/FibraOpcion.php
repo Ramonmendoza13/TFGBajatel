@@ -22,4 +22,18 @@ class FibraOpcion extends Model
     {
         return $this->hasMany(ContratoServicio::class, 'id_fibra');
     }
+
+    protected static function booted()
+    {
+        static::updated(function ($fibra) {
+            // Solo actuamos si el precio ha cambiado
+            if ($fibra->wasChanged('precio')) {
+                $fibra->contratosServicio->load('contrato');
+                $contratos = $fibra->contratosServicio->pluck('contrato')->unique('id_contrato');
+                foreach ($contratos as $contrato) {
+                    if ($contrato) $contrato->actualizarPrecioTotal();
+                }
+            }
+        });
+    }
 }

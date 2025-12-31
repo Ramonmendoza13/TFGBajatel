@@ -22,5 +22,22 @@ class MovilOpcion extends Model
     {
         return $this->hasMany(LineaMovilContratada::class, 'id_movil');
     }
+
+    protected static function booted()
+    {
+        static::updated(function ($movil) {
+            // Solo actuamos si el precio ha cambiado
+            if ($movil->wasChanged('precio')) {
+                $movil->lineas->load('servicio.contrato');
+                $contratos = $movil->lineas->map(function ($l) {
+                    return $l->servicio->contrato ?? null;
+                })->filter()->unique('id_contrato');
+
+                foreach ($contratos as $contrato) {
+                    if ($contrato) $contrato->actualizarPrecioTotal();
+                }
+            }
+        });
+    }
 }
 

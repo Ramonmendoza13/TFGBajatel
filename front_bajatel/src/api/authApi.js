@@ -31,12 +31,12 @@ export const editarPerfil = async (email, passwordActual, passwordNueva = "", to
                 Authorization: `Bearer ${token}`,
             },
             // Permite que Axios devuelva el control al 'try' para códigos < 500
-            validateStatus: (status) => status >= 200 && status < 500, 
+            validateStatus: (status) => status >= 200 && status < 500,
         });
-        
+
         // Devuelve la respuesta completa (incluyendo data, status, etc.)
-        return response; 
-        
+        return response;
+
     } catch (error) {
         // Esto solo atrapará errores de red, de configuración o 5xx.
         throw error;
@@ -54,4 +54,10 @@ export const eliminarCuenta = async (token) => {
     } catch (error) {
         throw error;
     }
+};
+
+// Registro
+export const registroRequest = async (nombre, apellidos, dni, email, password) => {
+    const { data } = await axiosClient.post("usuario/registro", { nombre, apellidos, dni, email, password });
+    return data; // data = { token, usuario }
 };

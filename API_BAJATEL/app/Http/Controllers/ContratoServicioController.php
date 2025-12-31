@@ -187,14 +187,14 @@ class ContratoServicioController extends Controller
     /**
      * Eliminar una línea móvil del contrato del usuario autenticado.
      */
-    public function eliminarLineaMovil(Request $request)
+    public function eliminarLineaMovil(Request $request, $numero)
     {
-        // Validar el número
-        $request->validate([
-            'numero_telefono' => 'required|string|max:9',
-        ]);
+        // Validar el número (viene por parámetro de ruta)
+        if (!preg_match('/^\d{9}$/', $numero)) {
+            return response()->json(['mensaje' => 'Número inválido.'], 400);
+        }
 
-        $telefono = $request->input('numero_telefono');
+        $telefono = $numero;
 
         // Encontrar el contrato del usuario autenticado
         $contratoUsuario = $request->user()->contrato;

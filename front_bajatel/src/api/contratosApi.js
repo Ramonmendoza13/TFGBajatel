@@ -88,77 +88,86 @@ export const contratarServicios = async ({
         return contrato.data;
 
     } catch (error) {
-        // Re-lanzamos el error para tratarlo en el componente
-        throw error.response?.data || { error: "Error inesperado" };
+        // Re-lanzamos el error original para que el componente pueda inspeccionar response/status
+        throw error;
     }
 };
 
-export const actualizarServicios = async ({
-    cliente,
-    seleccion,
-    token
-}) => {
+export const actualizarServicios = async ({ cliente, seleccion, token }) => {
     try {
         // 1. Actualizar datos generales
-        const contrato = await axiosClient.put(
+        await axiosClient.put(
             "contratos/actualizar",
             {
-                iban: cliente.iban,           // Laravel espera 'iban'
-                calle_y_n: cliente.calle,     // Laravel espera 'calle_y_n'
-                ciudad: cliente.ciudad,       // Laravel espera 'ciudad'
-                provincia: cliente.provincia, // Laravel espera 'provincia'
-                codigo_postal: cliente.cp     // Laravel espera 'codigo_postal' (mapeamos desde cliente.cp)
+                iban: cliente.iban,
+                calle_y_n: cliente.calle,
+                ciudad: cliente.ciudad,
+                provincia: cliente.provincia,
+                codigo_postal: cliente.cp
             },
             { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        // 2. Gestión Fibra (Igual que antes - UPSERT)
+        // 2. Fibra
         if (seleccion.fibra) {
-            await axiosClient.put(`/contratos/anadirServicioFibra/${seleccion.fibra.id_fibra}`, {}, { headers: { Authorization: `Bearer ${token}` } });
+            await axiosClient.put(
+                `/contratos/anadirServicioFibra/${seleccion.fibra.id_fibra}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
         } else {
-            try { await axiosClient.delete("/contratos/eliminarServicioFibra", { headers: { Authorization: `Bearer ${token}` } }); } catch (e) { }
+            try { await axiosClient.delete("/contratos/eliminarServicioFibra", { headers: { Authorization: `Bearer ${token}` } }); } catch { }
         }
 
-        // 3. Gestión TV (Igual que antes - UPSERT)
+        // 3. TV
         if (seleccion.tv) {
-            await axiosClient.put(`/contratos/anadirServicioTV/${seleccion.tv.id_tv}`, {}, { headers: { Authorization: `Bearer ${token}` } });
+            await axiosClient.put(
+                `/contratos/anadirServicioTV/${seleccion.tv.id_tv}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
         } else {
-            try { await axiosClient.delete("/contratos/eliminarServicioTV", { headers: { Authorization: `Bearer ${token}` } }); } catch (e) { }
+            try { await axiosClient.delete("/contratos/eliminarServicioTV", { headers: { Authorization: `Bearer ${token}` } }); } catch { }
         }
 
-        // 4. GESTIÓN DE MÓVILES (Lógica Mejorada)
-        for (const linea of seleccion.movil) {
+        // 4. Líneas móviles
 
-            // Si no tiene tarifa seleccionada, la saltamos
-            if (!linea.tarifa) continue;
+        // Normalizar la estructura: aceptar tanto el formato antiguo (array) como el nuevo { eliminadas, actuales }
+        const movil = Array.isArray(seleccion.movil)
+            ? { eliminadas: seleccion.movilEliminadas || [], actuales: seleccion.movil }
+            : seleccion.movil;
 
-            // CASO A: LÍNEA NUEVA O PORTABILIDAD -> CREAR (POST)
+        // 4a. Eliminar las que se han marcado
+        for (const numero of movil.eliminadas) {
+            await axiosClient.delete(`/contratos/eliminarLineaMovil/${numero}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        }
+
+        // 4b. Añadir o actualizar las que quedan
+        for (const linea of movil.actuales) {
             if (linea.tipo === 'nuevo' || linea.tipo === 'porta') {
                 await axiosClient.post(
                     `/contratos/anadirLineaMovil/${linea.tarifa.id_movil}`,
-                    {
-                        numero_telefono: linea.tipo === "porta" ? linea.numPorta : null
-                    },
+                    { numero_telefono: linea.tipo === "porta" ? linea.numPorta : null },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-            }
-
-            // CASO B: LÍNEA EXISTENTE -> ACTUALIZAR TARIFA (PUT)
-            else if (linea.tipo === 'existente') {
-                // Enviamos el número actual para identificar la línea y el ID de la nueva tarifa en la URL
+            } else if (linea.tipo === 'existente') {
                 await axiosClient.put(
                     `/contratos/actualizarLineaMovil/${linea.tarifa.id_movil}`,
-                    {
-                        numero_telefono: linea.numero // Identificador clave
-                    },
+                    { numero_telefono: linea.numero },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
             }
         }
 
-        return contrato.data;
+        return true;
 
     } catch (error) {
-        throw error.response?.data || { error: "Error al actualizar el contrato" };
+        // Re-lanzamos el error original para que el componente pueda inspeccionar response/status
+        throw error;
     }
+};
+
+export const getDetallesContrato = async (token) => {
 };

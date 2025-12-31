@@ -1,6 +1,6 @@
-import { 
-    Smartphone, Tv, Plus, Trash2, CheckCircle, Wifi, 
-    Phone, ArrowRightLeft, MapPin, CreditCard, AlertTriangle 
+import {
+    Smartphone, Tv, Plus, Trash2, CheckCircle, Wifi,
+    Phone, ArrowRightLeft, MapPin, CreditCard, AlertTriangle
 } from "lucide-react";
 
 // --- COMPONENTES UI COMPARTIDOS ---
@@ -59,12 +59,12 @@ export const LineaMovilCard = ({ linea, index, ofertas, actions }) => (
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
             {ofertas.map(m => (
-                <OpcionCard key={m.id_movil} compact 
-                    activo={linea.tarifa?.id_movil === m.id_movil} 
+                <OpcionCard key={m.id_movil} compact
+                    activo={linea.tarifa?.id_movil === m.id_movil}
                     onClick={() => actions.toggleTarifa(linea.uid, m)}
-                    titulo={`${m.gb_datos} GB`} 
-                    subtitulo={m.min_llamadas === -1 ? "Ilimitadas" : `${m.min_llamadas} min`} 
-                    precio={m.precio} 
+                    titulo={`${m.gb_datos === -1 ? "∞" : m.gb_datos} GB`}
+                    subtitulo={m.min_llamadas === -1 ? "Ilimitadas" : `${m.min_llamadas} min`}
+                    precio={m.precio}
                     legacy={m._legacy}
                 />
             ))}
@@ -73,7 +73,7 @@ export const LineaMovilCard = ({ linea, index, ofertas, actions }) => (
         <div className="border-t border-slate-200 pt-4">
             {linea.tipo === 'existente' ? (
                 <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-slate-200">
-                    <div className="bg-slate-100 p-2 rounded-full"><Phone size={16} className="text-slate-500"/></div>
+                    <div className="bg-slate-100 p-2 rounded-full"><Phone size={16} className="text-slate-500" /></div>
                     <div>
                         <p className="text-xs font-bold text-slate-400 uppercase">Número asociado</p>
                         <p className="text-sm font-bold text-slate-800 font-mono">{linea.numero}</p>
@@ -107,14 +107,32 @@ export const OpcionRadio = ({ active, onClick, icon: Icon, label, color }) => (
     </div>
 );
 
-export const InputGroup = ({ label, icon: Icon, val, onChange, mono, className, ...props }) => (
+import Cleave from "cleave.js/react";
+
+export const InputGroup = ({ label, icon: Icon, val, onChange, mono, className, cleaveOptions, ...props }) => (
     <div className={className}>
         <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">{label}</label>
         <div className="relative group">
             {Icon && (
                 <Icon className="absolute left-3 top-3 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
             )}
-            <input value={val} onChange={onChange} {...props} className={`w-full py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm ${Icon ? 'pl-10' : 'px-4'} ${mono ? 'font-mono tracking-wide' : 'font-medium text-slate-700'}`} />
+
+            {cleaveOptions ? (
+                <Cleave
+                    value={val}
+                    onChange={onChange}
+                    options={cleaveOptions}
+                    {...props}
+                    className={`w-full py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm ${Icon ? 'pl-10' : 'px-4'} ${mono ? 'font-mono tracking-wide' : 'font-medium text-slate-700'}`}
+                />
+            ) : (
+                <input
+                    value={val}
+                    onChange={onChange}
+                    {...props}
+                    className={`w-full py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm ${Icon ? 'pl-10' : 'px-4'} ${mono ? 'font-mono tracking-wide' : 'font-medium text-slate-700'}`}
+                />
+            )}
         </div>
     </div>
 );

@@ -65,7 +65,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // --- ELIMINAR SERVICIOS ---
         Route::delete('/eliminarServicioFibra', [ContratoServicioController::class, 'eliminarServicioFibra']);
         Route::delete('/eliminarServicioTV', [ContratoServicioController::class, 'eliminarServicioTV']);
-        Route::delete('/eliminarLineaMovil', [ContratoServicioController::class, 'eliminarLineaMovil']);
+        Route::delete('/eliminarLineaMovil/{numero}', [ContratoServicioController::class, 'eliminarLineaMovil'])->whereNumber('numero');
     });
 });
 

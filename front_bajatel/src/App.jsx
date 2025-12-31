@@ -15,7 +15,7 @@ import AnadirOpcionTvPage from "./pages/AnadirOpcionTvPage";
 import EditarOpcionTvPage from "./pages/EditarOpcionTvPage";
 import ContratarPage from "./pages/ContratarPage";
 import EditarContratoPage from "./pages/EditarContratoPage";
-
+import RegistroPage from "./pages/RegistroPage";
 
 const App = () => {
   return (
@@ -129,6 +129,14 @@ const App = () => {
         element={
           <Layout>
             <EditarContratoPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/registro"
+        element={
+          <Layout>
+            <RegistroPage />
           </Layout>
         }
       />
