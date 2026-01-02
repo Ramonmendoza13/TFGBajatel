@@ -34,17 +34,14 @@ RUN mkdir -p storage/framework/cache/data \
     && chmod -R 777 storage bootstrap/cache database
 
 # Crear archivo SQLite si no existe
-RUN touch database/database.sqlite \
-    && chmod 777 database/database.sqlite
-
-# Limpiar cache y configuración de Laravel para producción
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
+RUN touch database/database.sqlite
 
 # Exponer puerto
 EXPOSE 8000
 
-# Comando por defecto: usar PHP built-in server apuntando a public/
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+# Copiar entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Comando por defecto: limpiar caches y arrancar servidor PHP en runtime
+CMD ["/entrypoint.sh"]
