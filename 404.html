@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Redirigiendo...</title>
+    <script>
+        // ----------------------------------------------------------------------
+        // SOLUCIÓN PARA GITHUB PAGES (SPA ROUTING)
+        // ----------------------------------------------------------------------
+        // ESTE SCRIPT ES SOLO NECESARIO PARA GITHUB PAGES.
+        // En un hosting profesional o en local, React Router funciona nativamente.
+        // GitHub Pages no soporta SPAs de caja, por lo que si recargas en una
+        // subruta (ej: /login), GitHub devuelve un 404.
+        //
+        // Este script toma la URL actual, la convierte en un parámetro de consulta
+        // y redirige al index.html, donde React Router puede recuperarla.
+        // ----------------------------------------------------------------------
+
+        var pathSegmentsToKeep = 1; // Mantenemos 1 segmento para el repo (/TFGBajatel/)
+
+        var l = window.location;
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
