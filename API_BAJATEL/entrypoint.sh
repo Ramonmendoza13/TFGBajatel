@@ -2,7 +2,7 @@
 # entrypoint.sh
 
 # Crear SQLite si no existe
-touch database/database.sqlite
+touch /tmp/database.sqlite
 
 # Limpiar caches de Laravel en runtime
 php artisan config:clear
