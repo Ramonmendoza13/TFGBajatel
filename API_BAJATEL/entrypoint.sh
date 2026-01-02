@@ -4,6 +4,12 @@
 # Crear SQLite si no existe
 touch /tmp/database.sqlite
 
+# Ejecutar migraciones
+php artisan migrate --force
+
+# Ejecutar seeders
+php artisan db:seed --force
+
 # Limpiar caches de Laravel en runtime
 php artisan config:clear
 php artisan cache:clear
