@@ -9,7 +9,7 @@ import { HelmetProvider } from "react-helmet-async";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/TFGBajatel/">
       <AuthProvider>
         <HelmetProvider>
           <App />

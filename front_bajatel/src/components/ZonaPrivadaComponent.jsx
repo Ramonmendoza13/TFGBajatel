@@ -45,43 +45,45 @@ function ZonaPrivadaComponent() {
       )}
 
       {usuario && (
-        <div className="max-w-7xl mx-auto mb-8 flex items-center gap-4">
-          <User className="w-10 h-10 text-blue-600" />
+        <div className="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          
+          {/* Bloque Izquierdo: Icono + Bienvenida + Editar */}
+          <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+            <User className="w-12 h-12 text-blue-600" />
 
-          {/* Contenedor Flex para el Título y el Botón de Editar */}
-          <div className="flex items-center gap-3">
+            <div className="flex flex-col md:flex-row items-center gap-3">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Bienvenido <span className="font-extrabold text-blue-700">{usuario.nombre}</span>
+              </h1>
 
-            <h1 className="text-3xl font-bold text-gray-900">
-              Bienvenido <span className="font-extrabold text-blue-700">{usuario.nombre}</span>
-            </h1>
-
-            {/* ✏️ BOTÓN DE EDITAR PERFIL (Estilo similar a "Cerrar Sesión") */}
-            <Link
-              to="/editar-perfil"
-              // Estilo: Azul (acorde con la sección de Fibra) y más pequeño
-              className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-600 font-semibold text-sm rounded-md border border-blue-300 hover:bg-blue-200 transition whitespace-nowrap"
-            >
-              <Pencil size={16} /> Editar Perfil
-            </Link>
-            {/* ------------------------------------------- */}
+              {/* ✏️ BOTÓN DE EDITAR PERFIL */}
+              <Link
+                to="/editar-perfil"
+                className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-600 font-semibold text-sm rounded-md border border-blue-300 hover:bg-blue-200 transition whitespace-nowrap"
+              >
+                <Pencil size={16} /> Editar Perfil
+              </Link>
+            </div>
           </div>
-          {(usuario.rol === "admin" || usuario.rol === "gestor") && (
-            <Link
-              to="/admin"
-              className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-600 font-semibold text-sm rounded-md border border-green-300 hover:bg-green-200 transition whitespace-nowrap"
+
+          {/* Bloque Derecho: Acciones (Admin + Logout) */}
+          <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
+            {(usuario.rol === "admin" || usuario.rol === "gestor") && (
+              <Link
+                to="/admin"
+                className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-600 font-semibold text-sm rounded-md border border-green-300 hover:bg-green-200 transition whitespace-nowrap"
+              >
+                <Pencil size={16} /> Panel Admin
+              </Link>
+            )}
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-1.5 bg-red-100 text-red-600 font-semibold rounded-md border border-red-300 hover:bg-red-200 transition whitespace-nowrap"
             >
-              <Pencil size={16} /> Panel Admin
-            </Link>
-          )}
-
-
-
-          <button
-            onClick={handleLogout}
-            className="ml-auto flex items-center gap-2 px-4 py-1.5 bg-red-100 text-red-600 font-semibold rounded-md border border-red-300 hover:bg-red-200 transition"
-          >
-            <LogOut size={18} /> Cerrar sesión
-          </button>
+              <LogOut size={18} /> Cerrar sesión
+            </button>
+          </div>
         </div>
       )}
 
