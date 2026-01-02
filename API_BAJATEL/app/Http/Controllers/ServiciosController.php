@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FibraOpcion;
-use App\Models\TVOpcion;
+use App\Models\TvOpcion;
 use App\Models\MovilOpcion;
 
 class ServiciosController extends Controller
 {
-     /**
+    /**
      * Mostrar todos los servicios disponibles
      */
     public function mostrarServiciosDisponibles()
     {
         $opcionesFibra = FibraOpcion::where('disponible', true)->get();
-        $opcionesTV = TVOpcion::where('disponible', true)->get();
+        $opcionesTV = TvOpcion::where('disponible', true)->get();
         $opcionesMovil = MovilOpcion::where('disponible', true)->get();
 
         return response()->json([
@@ -31,7 +31,7 @@ class ServiciosController extends Controller
     public function mostrarTodosServicios()
     {
         $opcionesFibra = FibraOpcion::all();
-        $opcionesTV = TVOpcion::all();
+        $opcionesTV = TvOpcion::all();
         $opcionesMovil = MovilOpcion::all();
 
         return response()->json([
