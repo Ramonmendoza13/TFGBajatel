@@ -34,7 +34,14 @@ RUN mkdir -p storage/framework/cache/data \
     && chmod -R 777 storage bootstrap/cache database
 
 # Crear archivo SQLite si no existe
-RUN touch database/database.sqlite
+RUN touch database/database.sqlite \
+    && chmod 777 database/database.sqlite
+
+# Limpiar cache y configuración de Laravel para producción
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
 
 # Exponer puerto
 EXPOSE 8000
