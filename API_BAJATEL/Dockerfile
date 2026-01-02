@@ -1,7 +1,7 @@
 # Dockerfile para API Laravel con PHP 8.2 CLI y Composer
 FROM php:8.2-cli
 
-# Variables de entorno
+# Carpeta de trabajo
 WORKDIR /var/www
 
 # Instalar dependencias del sistema y extensiones PHP necesarias
@@ -18,14 +18,26 @@ RUN apt-get update && apt-get install -y \
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar el proyecto al contenedor
+# Copiar proyecto al contenedor
 COPY . .
 
-# Instalar dependencias de PHP
+# Instalar dependencias PHP
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Exponer puerto para artisan serve
+# Crear carpetas necesarias y dar permisos (Laravel necesita storage y cache)
+RUN mkdir -p storage/framework/cache/data \
+    storage/framework/views \
+    storage/framework/sessions \
+    storage/logs \
+    bootstrap/cache \
+    database \
+    && chmod -R 777 storage bootstrap/cache database
+
+# Crear archivo SQLite si no existe
+RUN touch database/database.sqlite
+
+# Exponer puerto
 EXPOSE 8000
 
-# Comando por defecto
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Comando por defecto: usar PHP built-in server apuntando a public/
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
