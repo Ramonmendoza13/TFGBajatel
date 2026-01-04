@@ -6,11 +6,12 @@ import { Link } from "react-router-dom";
 import { Wifi, Save } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
-
+// Componente para editar una opción de fibra existente
 export default function EditarOpcionFibraComponent() {
     const { id } = useParams();
     const { token } = useContext(AuthContext);
 
+    // Estados del formulario
     const [tarifaFibra, setTarifaFibra] = useState(null);
     const [velocidad, setVelocidad] = useState("");
     const [precio, setPrecio] = useState("");
@@ -24,7 +25,7 @@ export default function EditarOpcionFibraComponent() {
                 const response = await obtenerDatosFibra(id, token);
                 setTarifaFibra(response.datos);
 
-                // Inicializar estados para inputs
+                // Rellenamos los campos con los datos actuales
                 setVelocidad(response.datos.velocidad);
                 setPrecio(response.datos.precio);
                 setDisponible(response.datos.disponible.toString());
@@ -36,23 +37,24 @@ export default function EditarOpcionFibraComponent() {
         cargarDatos();
     }, [id, token]);
 
+    // Función para enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // 2. Convertimos disponible a booleano real antes de enviar
+            // Convertimos el string a booleano
             const isDisponible = disponible === "true";
 
             await EditarFibra(
                 id,
-                Number(velocidad),   // asegurar que sea numérico
+                Number(velocidad),
                 Number(precio),
-                isDisponible,        // ya convertido a booleano
+                isDisponible,
                 token
             );
             localStorage.setItem("adminMessage", `Tarifa de Fibra con ID ${id} actualizada correctamente`);
 
-            // Si sale bien, vamos a la zona privada
+            // Volvemos al panel de admin
             navigate("/admin");
         } catch (err) {
             alert("Hubo un error al guardar la opción de fibra");

@@ -1,18 +1,18 @@
 import { editarPerfil, eliminarCuenta } from "../api/authApi";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom"; // Importamos useNavigate para redirigir al borrar
-import { AlertTriangle, Trash2, XCircle } from "lucide-react"; // Iconos opcionales para mejor UX
+import { Link, useNavigate } from "react-router-dom";
+import { AlertTriangle, Trash2, XCircle } from "lucide-react";
 
+// Componente para editar el perfil del usuario
 function EditarPerfilComponent() {
-    // Añadimos 'logout' para cerrar sesión tras borrar la cuenta
     const { token, usuario, updateUser, logout } = useContext(AuthContext);
     const [email, setEmail] = useState(usuario.email);
     const [passwordActual, setPasswordActual] = useState("");
     const [passwordNueva, setPasswordNueva] = useState("");
     const [mensaje, setMensaje] = useState("");
     
-    // Estado para mostrar/ocultar la sección de confirmación
+    // Estado para mostrar la confirmación de eliminar cuenta
     const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
     
     const navigate = useNavigate();
@@ -45,11 +45,11 @@ function EditarPerfilComponent() {
         }
     };
 
-    // Función para procesar la eliminación definitiva
+    // Función para eliminar la cuenta
     const handleEliminarDefinitivamente = async () => {
         try {
             await eliminarCuenta(token);
-            // Si sale bien, cerramos sesión localmente y redirigimos al inicio
+            // Cerramos sesión y volvemos al inicio
             logout(); 
             navigate("/"); 
         } catch (error) {

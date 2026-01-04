@@ -5,10 +5,10 @@ import { AuthContext } from "../context/AuthContext";
 import { anadirFibraMovil } from "../api/serviciosApi";
 import { useNavigate } from "react-router-dom";
 
-
-
+// Componente para añadir una nueva tarifa móvil
 export default function AnadirOpcionMovilComponent() {
 
+    // Estados del formulario
     const [gb_datos, setDatos] = useState('');
     const [minutos, setLlamadas] = useState('');
     const [precio, setPrecio] = useState('');
@@ -18,18 +18,19 @@ export default function AnadirOpcionMovilComponent() {
     const navigate = useNavigate();
 
 
+    // Función para enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            // 2. Convertimos disponible a booleano real antes de enviar
+            // Convertimos el string a booleano
             const isDisponible = disponible === "true";
 
             await anadirFibraMovil(gb_datos, minutos, precio, isDisponible, token);
             localStorage.setItem("adminMessage", `Tarifa de Movil creada correctamente`);
 
-            // Si sale bien, vamos a la zona privada
+            // Volvemos al panel de admin
             navigate("/admin");
         } catch (err) {
             alert("Hubo un error al guardar la opción de fibra");

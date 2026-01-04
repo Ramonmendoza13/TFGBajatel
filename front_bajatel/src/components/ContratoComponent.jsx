@@ -7,18 +7,18 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { Wifi, Smartphone, Tv, Pencil, X } from "lucide-react";
 
+// Componente que muestra el contrato del usuario
 function ContratoComponent() {
   const { token } = useContext(AuthContext);
   const [contratoData, setContratoData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Nuevo: mensaje de éxito
   const [successMessage, setSuccessMessage] = useState(null);
 
   const navigate = useNavigate();
 
-  // FUNCION PARA OBTENER EL CONTRATO
+  // Función para obtener el contrato
   const fetchContrato = async () => {
     setLoading(true);
     try {
@@ -35,7 +35,7 @@ function ContratoComponent() {
     fetchContrato();
   }, [token]);
 
-  // CANCELAR CONTRATO
+  // Función para cancelar el contrato
   const handleCancelarContrato = async () => {
     try {
       const response = await cancelarContratoUsuario(token);

@@ -7,6 +7,7 @@ import { useContrato } from "../hooks/useContrato";
 import * as UI from "../components/ContratoCommon";
 import { Wifi, Smartphone, Tv, FileText, MapPin, CreditCard, ShoppingBag, CheckCircle } from "lucide-react";
 
+// Componente para editar el contrato existente
 export default function EditarContratoComponent() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function EditarContratoComponent() {
 
         const { contrato, servicios } = contratoData;
 
-        // --- LOGICA DE MAPEO ---
+        // Procesamos las opciones de fibra
         let ofertasFibra = [...ofertasData.fibra];
         let seleccionFibra = null;
         if (servicios.fibra) {
@@ -87,8 +88,8 @@ export default function EditarContratoComponent() {
     cargarDatos();
   }, [token, setSeleccion, setCliente]);
 
-  // CAMBIO 2: Función contratar actualizada para usar actualizarServicios
- const ActualizarContrato = async () => {
+  // Función para actualizar el contrato
+  const ActualizarContrato = async () => {
     setError(null);
     setEnviando(true);
     
@@ -105,10 +106,9 @@ export default function EditarContratoComponent() {
       navigate("/zona-privada");
 
     } catch (error) {
-      console.error("DETALLE DEL ERROR:", error); // <--- Mira esto en la consola (F12)
+      console.error("DETALLE DEL ERROR:", error);
 
-      // CASO 1: El servidor respondió "OK" (200) pero no envió JSON válido (SyntaxError)
-      // Ocurre a menudo si el backend devuelve string plano. Asumimos éxito.
+      // Si hay error de formato JSON pero la petición fue exitosa
       if (error instanceof SyntaxError || error.message?.includes("JSON") || error.message?.includes("token")) {
          console.warn("Error de formato detectado, pero la petición probablemente tuvo éxito. Redirigiendo...");
          navigate("/zona-privada");
@@ -117,9 +117,8 @@ export default function EditarContratoComponent() {
 
       setEnviando(false);
 
-      // CASO 2: Error HTTP real (400, 401, 500)
+      // Errores HTTP del servidor
       if (error.response?.status) {
-        // Si es un error del servidor, mostramos su mensaje
         setError(error.response.data?.message || `Error ${error.response.status}: No se pudo actualizar`);
       } 
       // CASO 3: Error de red o CORS (response es undefined)
@@ -148,7 +147,7 @@ export default function EditarContratoComponent() {
             <UI.Seccion icono={Wifi} titulo="Fibra Óptica" subtitulo="Velocidad simétrica garantizada">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {ofertas.fibra.map(f => (
-                  <UI.OpcionCard key={f.id_fibra} activo={seleccion.fibra?.id_fibra === f.id_fibra} onClick={() => alternarServicio('fibra', f, 'id_fibra')} titulo={`${f.velocidad} Mb`} subtitulo="Fibra Simétrica" precio={f.precio} legacy={f._legacy} />
+                  <UI.OpcionCard key={f.id_fibra} activo={seleccion.fibra?.id_fibra === f.id_fibra} onClick={() => alternarServicio('fibra', f, 'id_fibra')} titulo={`${f.velocidad < 1000 ? `${f.velocidad} Mbps` : `${Math.floor(f.velocidad / 1000)} Gbps`}`} subtitulo="Fibra Simétrica" precio={f.precio} legacy={f._legacy} />
                 ))}
               </div>
             </UI.Seccion>
@@ -196,7 +195,7 @@ export default function EditarContratoComponent() {
               </div>
               <div className="p-6 space-y-4">
                 <div className="space-y-3">
-                  <UI.ItemResumen icono={Wifi} label="Fibra" val={seleccion.fibra ? `${seleccion.fibra.velocidad} Mb` : null} precio={seleccion.fibra?.precio} warning={seleccion.fibra?._legacy} />
+                  <UI.ItemResumen icono={Wifi} label="Fibra" val={seleccion.fibra ? `${seleccion.fibra.velocidad < 1000 ? `${seleccion.fibra.velocidad} Mbps` : `${Math.floor(seleccion.fibra.velocidad / 1000)} Gbps`}` : null} precio={seleccion.fibra?.precio} warning={seleccion.fibra?._legacy} />
                   <UI.ItemResumen icono={Tv} label="TV" val={seleccion.tv ? seleccion.tv.nombre_paquete : null} precio={seleccion.tv?.precio} warning={seleccion.tv?._legacy} />
                 </div>
                 {seleccion.movil.length > 0 && (

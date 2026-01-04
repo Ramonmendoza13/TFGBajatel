@@ -1,3 +1,4 @@
+// Importamos las funciones de la API y los hooks necesarios
 import { fetchUsuarios, fetchServicios, cambiarRolUsuario, eliminarUsuario } from "../api/adminApi";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -12,8 +13,9 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
+// Componente del panel de administración
 export default function AdminComponent() {
+    // Estados para guardar usuarios y servicios
     const [Usuarios, setUsuarios] = useState([]);
     const [servicios, setServicios] = useState({
         fibra: [],
@@ -21,6 +23,7 @@ export default function AdminComponent() {
         movil: [],
     });
 
+    // Obtenemos el token y usuario del contexto
     const { token, usuario } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [mensaje, setMensaje] = useState(null);

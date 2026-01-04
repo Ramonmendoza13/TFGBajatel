@@ -1,0 +1,1201 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Bajatel - Proyecto DAW",
+        "description": "API REST para gestión de contratos de telecomunicaciones (Fibra, TV, Móvil)",
+        "contact": {
+            "email": "soporte@bajatel.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Servidor de desarrollo"
+        }
+    ],
+    "paths": {
+        "/contratos/crear": {
+            "post": {
+                "tags": [
+                    "Contratos"
+                ],
+                "summary": "Crear nuevo contrato",
+                "operationId": "ec479ce5360bf594769a57f23061a85e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "iban",
+                                    "calle_y_n",
+                                    "ciudad",
+                                    "provincia",
+                                    "codigo_postal"
+                                ],
+                                "properties": {
+                                    "iban": {
+                                        "type": "string",
+                                        "maxLength": 29,
+                                        "minLength": 29,
+                                        "example": "ES9121000418450200051332"
+                                    },
+                                    "calle_y_n": {
+                                        "type": "string",
+                                        "example": "Calle Mayor 123"
+                                    },
+                                    "ciudad": {
+                                        "type": "string",
+                                        "example": "Madrid"
+                                    },
+                                    "provincia": {
+                                        "type": "string",
+                                        "example": "Madrid"
+                                    },
+                                    "codigo_postal": {
+                                        "type": "string",
+                                        "example": "28001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Contrato creado"
+                    },
+                    "400": {
+                        "description": "Usuario ya tiene contrato"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/actualizar": {
+            "put": {
+                "tags": [
+                    "Contratos"
+                ],
+                "summary": "Actualizar contrato existente",
+                "operationId": "2c7aa552377d31ad07574afe9388e97a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "iban": {
+                                        "type": "string"
+                                    },
+                                    "calle_y_n": {
+                                        "type": "string"
+                                    },
+                                    "ciudad": {
+                                        "type": "string"
+                                    },
+                                    "provincia": {
+                                        "type": "string"
+                                    },
+                                    "codigo_postal": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contrato actualizado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "404": {
+                        "description": "Contrato no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/cancelar": {
+            "delete": {
+                "tags": [
+                    "Contratos"
+                ],
+                "summary": "Cancelar/eliminar contrato",
+                "operationId": "113a3452f938b3ac45a1afba327cfd22",
+                "responses": {
+                    "200": {
+                        "description": "Contrato eliminado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado"
+                    },
+                    "404": {
+                        "description": "Contrato no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/mostrar": {
+            "get": {
+                "tags": [
+                    "Contratos"
+                ],
+                "summary": "Mostrar contrato del usuario con servicios",
+                "operationId": "1af5ecf5e69ae9118c5ddc00a6349f1b",
+                "responses": {
+                    "200": {
+                        "description": "Contrato con servicios"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado"
+                    },
+                    "404": {
+                        "description": "Contrato no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/anadirServicioFibra/{id}": {
+            "post": {
+                "tags": [
+                    "Servicios Contrato"
+                ],
+                "summary": "Añadir/actualizar servicio de fibra al contrato",
+                "operationId": "49f3bf501a64464f3b16e52effb50723",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la opción de fibra",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Servicio añadido/actualizado"
+                    },
+                    "404": {
+                        "description": "Usuario sin contrato"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/anadirServicioTV/{id}": {
+            "post": {
+                "tags": [
+                    "Servicios Contrato"
+                ],
+                "summary": "Añadir/actualizar servicio de TV al contrato",
+                "operationId": "3e390fa59b3eb916d9b37900cbed2c42",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la opción de TV",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Servicio añadido/actualizado"
+                    },
+                    "404": {
+                        "description": "Usuario sin contrato"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/eliminarServicioFibra": {
+            "delete": {
+                "tags": [
+                    "Servicios Contrato"
+                ],
+                "summary": "Eliminar servicio de fibra del contrato",
+                "operationId": "de049a7ac3947f1dabd15096a9bb7909",
+                "responses": {
+                    "200": {
+                        "description": "Servicio eliminado"
+                    },
+                    "404": {
+                        "description": "Sin servicio de fibra"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/anadirLineaMovil/{id}": {
+            "post": {
+                "tags": [
+                    "Servicios Contrato"
+                ],
+                "summary": "Añadir línea móvil al contrato",
+                "operationId": "bc7a36a0e8a11c0a2441be81ff16f7dd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la opción móvil",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero_telefono": {
+                                        "type": "string",
+                                        "example": "612345678",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Línea añadida"
+                    },
+                    "404": {
+                        "description": "Usuario sin contrato"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/contratos/eliminarLineaMovil/{numero}": {
+            "delete": {
+                "tags": [
+                    "Servicios Contrato"
+                ],
+                "summary": "Eliminar línea móvil del contrato",
+                "operationId": "75aae3f6e376c8ca5015df5764cc1ece",
+                "parameters": [
+                    {
+                        "name": "numero",
+                        "in": "path",
+                        "description": "Número de teléfono",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Línea eliminada"
+                    },
+                    "404": {
+                        "description": "Línea no encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/fibra": {
+            "post": {
+                "tags": [
+                    "Admin - Fibra"
+                ],
+                "summary": "Añadir opción de fibra",
+                "operationId": "302843ba242b125c3475559d94419efa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "velocidad",
+                                    "precio"
+                                ],
+                                "properties": {
+                                    "velocidad": {
+                                        "type": "number",
+                                        "example": 600
+                                    },
+                                    "precio": {
+                                        "type": "number",
+                                        "example": 29.99
+                                    },
+                                    "disponible": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Opción añadida"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Requiere rol gestor/admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/fibra/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Fibra"
+                ],
+                "summary": "Mostrar opción de fibra",
+                "operationId": "4ce3cead1460915e069769e03fe10a2a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Opción encontrada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin - Fibra"
+                ],
+                "summary": "Editar opción de fibra",
+                "operationId": "5f3d7682729f9eea5422d77f587f3f08",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "velocidad": {
+                                        "type": "number"
+                                    },
+                                    "precio": {
+                                        "type": "number"
+                                    },
+                                    "disponible": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Opción actualizada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/movil": {
+            "post": {
+                "tags": [
+                    "Admin - Móvil"
+                ],
+                "summary": "Añadir opción de móvil",
+                "operationId": "50d77de6231b5e3aaefdfddc16ac4bf3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "gb_datos",
+                                    "minutos",
+                                    "precio",
+                                    "disponible"
+                                ],
+                                "properties": {
+                                    "gb_datos": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "minutos": {
+                                        "type": "number",
+                                        "example": 1000
+                                    },
+                                    "precio": {
+                                        "type": "number",
+                                        "example": 15.99
+                                    },
+                                    "disponible": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Opción añadida"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Requiere rol gestor/admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/movil/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Móvil"
+                ],
+                "summary": "Mostrar opción de móvil",
+                "operationId": "9464427b0894346e67b1fdac526527b0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Opción encontrada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin - Móvil"
+                ],
+                "summary": "Editar opción de móvil",
+                "operationId": "0cc308ff32f6d8686c78875df01913c9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "gb_datos": {
+                                        "type": "number"
+                                    },
+                                    "minutos": {
+                                        "type": "number"
+                                    },
+                                    "precio": {
+                                        "type": "number"
+                                    },
+                                    "disponible": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Opción actualizada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/disponibles": {
+            "get": {
+                "tags": [
+                    "Servicios Disponibles"
+                ],
+                "summary": "Listar servicios disponibles (público)",
+                "operationId": "cb28227ef933f5ac7f292064aa492b1e",
+                "responses": {
+                    "200": {
+                        "description": "Servicios disponibles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "fibra": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "tv": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "movil": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/servicios/mostrar": {
+            "get": {
+                "tags": [
+                    "Servicios Disponibles"
+                ],
+                "summary": "Listar todos los servicios (admin/gestor)",
+                "operationId": "d6e789e3458ca91eb577c166c445b40d",
+                "responses": {
+                    "200": {
+                        "description": "Todos los servicios"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Requiere rol gestor/admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/tv": {
+            "post": {
+                "tags": [
+                    "Admin - TV"
+                ],
+                "summary": "Añadir opción de TV",
+                "operationId": "8e562be4f57ab5b9fff7180d6b38deeb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre_paquete",
+                                    "precio",
+                                    "disponible"
+                                ],
+                                "properties": {
+                                    "nombre_paquete": {
+                                        "type": "string",
+                                        "example": "Paquete Premium"
+                                    },
+                                    "precio": {
+                                        "type": "number",
+                                        "example": 19.99
+                                    },
+                                    "disponible": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Opción añadida"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Requiere rol gestor/admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/servicios/tv/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - TV"
+                ],
+                "summary": "Mostrar opción de TV",
+                "operationId": "9a23e1172a1cf96818e351bb0ecd1f48",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Opción encontrada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin - TV"
+                ],
+                "summary": "Editar opción de TV",
+                "operationId": "5f45bb978536cfaa69dad4459c2d19a0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre_paquete": {
+                                        "type": "string"
+                                    },
+                                    "precio": {
+                                        "type": "number"
+                                    },
+                                    "disponible": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Opción actualizada"
+                    },
+                    "404": {
+                        "description": "No encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/usuario/registro": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar nuevo usuario",
+                "operationId": "43361b0156e412663c4c205817c00d66",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "apellidos",
+                                    "dni",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Juan"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "García López"
+                                    },
+                                    "dni": {
+                                        "type": "string",
+                                        "maxLength": 9,
+                                        "minLength": 9,
+                                        "example": "12345678A"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 6,
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario registrado correctamente"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/usuario/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Iniciar sesión",
+                "operationId": "fad3dec8b27517a3a7c3df4e6a4ec299",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login exitoso - Devuelve token"
+                    },
+                    "401": {
+                        "description": "Credenciales inválidas"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/usuario/eliminarCuenta": {
+            "delete": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Eliminar cuenta del usuario autenticado",
+                "operationId": "226f4c984e21ed9b645fbe9482523e09",
+                "responses": {
+                    "200": {
+                        "description": "Cuenta eliminada correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/usuario/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Cerrar sesión",
+                "operationId": "568f17fb2b8f268397a5d0731a2bb05b",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada correctamente"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/usuario/editarPerfil": {
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Editar perfil del usuario",
+                "operationId": "0a834bc086418d2436d1482f6645e1c0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "passwordActual"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "passwordActual": {
+                                        "type": "string"
+                                    },
+                                    "passwordNueva": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perfil actualizado"
+                    },
+                    "401": {
+                        "description": "Contraseña actual incorrecta"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/usuarios": {
+            "get": {
+                "tags": [
+                    "Admin - Usuarios"
+                ],
+                "summary": "Listar todos los usuarios con sus contratos",
+                "operationId": "2ec243f8ca47e2227b693f2a8e2c2a0d",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuarios"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Requiere rol gestor/admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/usuario/{id}/gestionarRol": {
+            "put": {
+                "tags": [
+                    "Admin - Usuarios"
+                ],
+                "summary": "Cambiar rol de usuario (cliente ↔ gestor)",
+                "operationId": "520fb0a4e5a14d1b6e38291c5645dd26",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rol modificado correctamente"
+                    },
+                    "400": {
+                        "description": "No se puede modificar rol de admin"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Solo admin"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/usuario/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin - Usuarios"
+                ],
+                "summary": "Eliminar usuario por ID",
+                "operationId": "75f4b508c381e69e781af1fac2bfb9e6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario eliminado correctamente"
+                    },
+                    "400": {
+                        "description": "No se puede eliminar admin"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "No autorizado - Solo admin"
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Laravel Sanctum - Usar: Bearer {token}",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Autenticación y gestión de usuarios"
+        },
+        {
+            "name": "Contratos",
+            "description": "Gestión de contratos"
+        },
+        {
+            "name": "Servicios Contrato",
+            "description": "Añadir/eliminar servicios a contratos"
+        },
+        {
+            "name": "Servicios Disponibles",
+            "description": "Consultar servicios disponibles"
+        },
+        {
+            "name": "Admin - Fibra",
+            "description": "Gestión de opciones de fibra (Admin/Gestor)"
+        },
+        {
+            "name": "Admin - TV",
+            "description": "Gestión de opciones de TV (Admin/Gestor)"
+        },
+        {
+            "name": "Admin - Móvil",
+            "description": "Gestión de opciones móviles (Admin/Gestor)"
+        },
+        {
+            "name": "Admin - Usuarios",
+            "description": "Gestión de usuarios (Admin)"
+        }
+    ]
+}

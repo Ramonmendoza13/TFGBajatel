@@ -1,30 +1,38 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { registroRequest } from "../api/authApi";
 import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
+// Componente de registro de nuevos usuarios
 export default function RegistroComponent() {
   const navigate = useNavigate();
+  // Estados del formulario
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [dni, setDni] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
+  
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // Función para enviar el formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrors({});
 
     try {
-      await registroRequest(nombre, apellidos, dni, email, password);
-      // El backend no devuelve token en registro, así que vamos al login
-      navigate("/login");
+      const data =  await registroRequest(nombre, apellidos, dni, email, password);
+      // Guardamos token y usuario
+      login(data);
+      // Navegar a zona privada
+      navigate("/zona-privada");
     } catch (error) {
       if (error.response && error.response.status === 422) {
-        // Errores de validación del backend (Laravel)
+        // Errores de validación del backend
         setErrors(error.response.data.errores);
       } else {
         console.error(error);
@@ -98,6 +106,8 @@ export default function RegistroComponent() {
                 type="text"
                 placeholder="12345678X"
                 value={dni}
+                required
+                maxLength={9} 
                 onChange={(e) => setDni(e.target.value)}
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 ${
                   errors.dni ? "border-red-500" : "border-gray-300"

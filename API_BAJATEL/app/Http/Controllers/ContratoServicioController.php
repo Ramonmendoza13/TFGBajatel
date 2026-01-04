@@ -9,7 +9,15 @@ use App\Models\LineaMovilContratada;
 class ContratoServicioController extends Controller
 {
     /**
-     * Añadir o actualizar un servicio de fibra para el contrato del usuario autenticado.
+     * @OA\Post(
+     *     path="/contratos/anadirServicioFibra/{id}",
+     *     summary="Añadir/actualizar servicio de fibra al contrato",
+     *     tags={"Servicios Contrato"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, description="ID de la opción de fibra", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Servicio añadido/actualizado"),
+     *     @OA\Response(response=404, description="Usuario sin contrato")
+     * )
      */
     public function anadirServicioFibra(Request $request, $id_fibra)
     {
@@ -42,7 +50,15 @@ class ContratoServicioController extends Controller
     }
 
     /**
-     * Añadir o actualizar un servicio de TV para el contrato del usuario autenticado.
+     * @OA\Post(
+     *     path="/contratos/anadirServicioTV/{id}",
+     *     summary="Añadir/actualizar servicio de TV al contrato",
+     *     tags={"Servicios Contrato"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, description="ID de la opción de TV", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Servicio añadido/actualizado"),
+     *     @OA\Response(response=404, description="Usuario sin contrato")
+     * )
      */
     public function anadirServicioTV(Request $request, $id_tv)
     {
@@ -76,7 +92,14 @@ class ContratoServicioController extends Controller
 
     // AÑADIR LOS METODOS PARA ELIMINAR SERVICIOS DE FIBRA Y TV
     /**
-     * Eliminar el servicio de fibra del contrato del usuario autenticado.
+     * @OA\Delete(
+     *     path="/contratos/eliminarServicioFibra",
+     *     summary="Eliminar servicio de fibra del contrato",
+     *     tags={"Servicios Contrato"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Servicio eliminado"),
+     *     @OA\Response(response=404, description="Sin servicio de fibra")
+     * )
      */
     public function eliminarServicioFibra(Request $request)
     {
@@ -129,7 +152,20 @@ class ContratoServicioController extends Controller
         ], 200);
     }
     /**
-     * Añadir una línea móvil al contrato del usuario autenticado.
+     * @OA\Post(
+     *     path="/contratos/anadirLineaMovil/{id}",
+     *     summary="Añadir línea móvil al contrato",
+     *     tags={"Servicios Contrato"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, description="ID de la opción móvil", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="numero_telefono", type="string", nullable=true, example="612345678")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Línea añadida"),
+     *     @OA\Response(response=404, description="Usuario sin contrato")
+     * )
      */
     public function anadirLineaMovil(Request $request, $id_opcion_movil)
     {
@@ -185,7 +221,15 @@ class ContratoServicioController extends Controller
         ], 201);
     }
     /**
-     * Eliminar una línea móvil del contrato del usuario autenticado.
+     * @OA\Delete(
+     *     path="/contratos/eliminarLineaMovil/{numero}",
+     *     summary="Eliminar línea móvil del contrato",
+     *     tags={"Servicios Contrato"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="numero", in="path", required=true, description="Número de teléfono", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="Línea eliminada"),
+     *     @OA\Response(response=404, description="Línea no encontrada")
+     * )
      */
     public function eliminarLineaMovil(Request $request, $numero)
     {

@@ -11,7 +11,24 @@ use Illuminate\Validation\ValidationException;
 class UsuarioController extends Controller
 {
     /**
-     * Registrar un nuevo usuario
+     * @OA\Post(
+     *     path="/usuario/registro",
+     *     summary="Registrar nuevo usuario",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre","apellidos","dni","email","password"},
+     *             @OA\Property(property="nombre", type="string", example="Juan"),
+     *             @OA\Property(property="apellidos", type="string", example="García López"),
+     *             @OA\Property(property="dni", type="string", minLength=9, maxLength=9, example="12345678A"),
+     *             @OA\Property(property="email", type="string", format="email", example="juan@example.com"),
+     *             @OA\Property(property="password", type="string", minLength=6, example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Usuario registrado correctamente"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
      */
     public function registro(Request $request)
     {
@@ -35,9 +52,12 @@ class UsuarioController extends Controller
                 'password' => Hash::make($datos['password']), // Hasheamos la contraseña
             ]);
 
+            $token = $usuario->createToken('auth-token')->plainTextToken;
+
             return response()->json([
                 'mensaje' => 'Usuario registrado correctamente. Ya puedes iniciar sesión.',
                 'usuario' => $usuario,
+                'token' => $token
             ], 201);
         } catch (ValidationException $e) {
             // Error de validación
@@ -55,7 +75,22 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Iniciar sesión de un usuario
+     * @OA\Post(
+     *     path="/usuario/login",
+     *     summary="Iniciar sesión",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *             @OA\Property(property="email", type="string", format="email", example="juan@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Login exitoso - Devuelve token"),
+     *     @OA\Response(response=401, description="Credenciales inválidas"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
      */
     public function login(Request $request)
     {
@@ -99,7 +134,14 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Borrar la cuenta de un usuario autenticado
+     * @OA\Delete(
+     *     path="/usuario/eliminarCuenta",
+     *     summary="Eliminar cuenta del usuario autenticado",
+     *     tags={"Auth"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Cuenta eliminada correctamente"),
+     *     @OA\Response(response=401, description="No autenticado")
+     * )
      */
     public function eliminarCuenta(Request $request)
     {
@@ -113,7 +155,14 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Cerrar sesión del usuario autenticado
+     * @OA\Post(
+     *     path="/usuario/logout",
+     *     summary="Cerrar sesión",
+     *     tags={"Auth"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Sesión cerrada correctamente"),
+     *     @OA\Response(response=401, description="No autenticado")
+     * )
      */
     public function logout(Request $request)
     {
@@ -128,7 +177,24 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Editar el perfil del usuario autenticado (correo y contraseña)
+     * @OA\Put(
+     *     path="/usuario/editarPerfil",
+     *     summary="Editar perfil del usuario",
+     *     tags={"Auth"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","passwordActual"},
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="passwordActual", type="string"),
+     *             @OA\Property(property="passwordNueva", type="string", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Perfil actualizado"),
+     *     @OA\Response(response=401, description="Contraseña actual incorrecta"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
      */
     public function editarPerfil(Request $request)
     {
@@ -178,7 +244,15 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Listar a todos los usuarios (solo para administradores)
+     * @OA\Get(
+     *     path="/usuarios",
+     *     summary="Listar todos los usuarios con sus contratos",
+     *     tags={"Admin - Usuarios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Lista de usuarios"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Requiere rol gestor/admin")
+     * )
      */
     public function listarUsuariosConContratos()
     {
@@ -193,7 +267,23 @@ class UsuarioController extends Controller
 
 
     /**
-     * Gestionar el rol de un usuario (solo para administradores)
+     * @OA\Put(
+     *     path="/usuario/{id}/gestionarRol",
+     *     summary="Cambiar rol de usuario (cliente ↔ gestor)",
+     *     tags={"Admin - Usuarios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Rol modificado correctamente"),
+     *     @OA\Response(response=400, description="No se puede modificar rol de admin"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Solo admin"),
+     *     @OA\Response(response=404, description="Usuario no encontrado")
+     * )
      */
     public function gestionarRol($id)
     {
@@ -220,7 +310,23 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Eliminar un usuario por ID (solo para administradores)
+     * @OA\Delete(
+     *     path="/usuario/{id}",
+     *     summary="Eliminar usuario por ID",
+     *     tags={"Admin - Usuarios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Usuario eliminado correctamente"),
+     *     @OA\Response(response=400, description="No se puede eliminar admin"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Solo admin"),
+     *     @OA\Response(response=404, description="Usuario no encontrado")
+     * )
      */
     public function eliminarUsuario($id)
     {

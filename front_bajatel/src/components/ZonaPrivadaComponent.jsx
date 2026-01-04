@@ -6,6 +6,7 @@ import { User, LogOut, Pencil } from "lucide-react";
 import ContratoComponent from "./ContratoComponent";
 import { Link } from "react-router-dom";
 
+// Componente de la zona privada del usuario
 function ZonaPrivadaComponent() {
   const { token, usuario, logout } = useContext(AuthContext);
   const navigate = useNavigate();

@@ -5,8 +5,9 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
+// Componente para añadir una nueva opción de TV
 export default function AnadirOpcionTvComponent() {
-    // 1. Definimos los estados para capturar los valores
+    // Estados del formulario
     const { token } = useContext(AuthContext);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -16,17 +17,17 @@ export default function AnadirOpcionTvComponent() {
     const [precio, setPrecio] = useState("");
 
 
+    // Función para enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // 2. Convertimos disponible a booleano real antes de enviar
+            // Convertimos el string a booleano
             const isDisponible = disponible === "true";
 
             await anadirTvOpcion(nombrePaquete, isDisponible, precio, token);
-            // Mensaje global
             localStorage.setItem("adminMessage", "Opcion TV añadida correctamente");
-            // Si sale bien, vamos a la zona privada
+            // Volvemos al panel de admin
             navigate("/admin");
         } catch (err) {
             alert("Hubo un error al guardar la opción de fibra");

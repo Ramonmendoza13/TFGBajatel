@@ -6,7 +6,6 @@ import { contratarServicios } from "../api/contratosApi";
 import { useContrato } from "../hooks/useContrato";
 import * as UI from "../components/ContratoCommon";
 import { Wifi, Smartphone, Tv, FileText, MapPin, CreditCard, ShoppingBag, CheckCircle } from "lucide-react";
-import Cleave from "cleave.js/react"; 
 
 export default function ContratarComponent() {
   const { token } = useContext(AuthContext);
@@ -65,7 +64,7 @@ export default function ContratarComponent() {
             <UI.Seccion icono={Wifi} titulo="Fibra Óptica" subtitulo="Velocidad simétrica garantizada">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {ofertas.fibra.map(f => (
-                  <UI.OpcionCard key={f.id_fibra} activo={seleccion.fibra?.id_fibra === f.id_fibra} onClick={() => alternarServicio('fibra', f, 'id_fibra')} titulo={`${f.velocidad} Mb`} subtitulo="Fibra Simétrica" precio={f.precio} />
+                  <UI.OpcionCard key={f.id_fibra} activo={seleccion.fibra?.id_fibra === f.id_fibra} onClick={() => alternarServicio('fibra', f, 'id_fibra')} titulo={`${f.velocidad < 1000 ? `${f.velocidad} Mbps` : `${Math.floor(f.velocidad / 1000)} Gbps`}`} subtitulo="Fibra Simétrica" precio={f.precio} />
                 ))}
               </div>
             </UI.Seccion>
@@ -114,7 +113,9 @@ export default function ContratarComponent() {
               </div>
               <div className="p-6 space-y-4">
                 <div className="space-y-3">
-                  <UI.ItemResumen icono={Wifi} label="Fibra" val={seleccion.fibra ? `${seleccion.fibra.velocidad} Mb` : null} precio={seleccion.fibra?.precio} />
+                  <UI.ItemResumen icono={Wifi} label="Fibra" val={seleccion.fibra ? `${seleccion.fibra.velocidad < 1000
+                                                        ? `${seleccion.fibra.velocidad} Mbps`
+                                                        : `${Math.floor(seleccion.fibra.velocidad / 1000)} Gbps`}` : null} precio={seleccion.fibra?.precio} />
                   <UI.ItemResumen icono={Tv} label="TV" val={seleccion.tv ? seleccion.tv.nombre_paquete : null} precio={seleccion.tv?.precio} />
                 </div>
                 {seleccion.movil.length > 0 && (

@@ -12,7 +12,27 @@ use App\Models\ContratoServicio;
 class ContratoController extends Controller
 {
     /**
-     * Crear un nuevo contrato
+     * @OA\Post(
+     *     path="/contratos/crear",
+     *     summary="Crear nuevo contrato",
+     *     tags={"Contratos"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"iban","calle_y_n","ciudad","provincia","codigo_postal"},
+     *             @OA\Property(property="iban", type="string", minLength=29, maxLength=29, example="ES9121000418450200051332"),
+     *             @OA\Property(property="calle_y_n", type="string", example="Calle Mayor 123"),
+     *             @OA\Property(property="ciudad", type="string", example="Madrid"),
+     *             @OA\Property(property="provincia", type="string", example="Madrid"),
+     *             @OA\Property(property="codigo_postal", type="string", example="28001")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Contrato creado"),
+     *     @OA\Response(response=400, description="Usuario ya tiene contrato"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
      */
     public function crear(Request $request)
     {
@@ -54,7 +74,25 @@ class ContratoController extends Controller
     }
 
     /**
-     * Actualizar un contrato existente
+     * @OA\Put(
+     *     path="/contratos/actualizar",
+     *     summary="Actualizar contrato existente",
+     *     tags={"Contratos"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="iban", type="string"),
+     *             @OA\Property(property="calle_y_n", type="string"),
+     *             @OA\Property(property="ciudad", type="string"),
+     *             @OA\Property(property="provincia", type="string"),
+     *             @OA\Property(property="codigo_postal", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Contrato actualizado"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=404, description="Contrato no encontrado"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
      */
     public function actualizar(Request $request)
     {
@@ -75,7 +113,7 @@ class ContratoController extends Controller
             'provincia' => 'sometimes|string|max:100',
             'codigo_postal' => 'sometimes|digits:5', // FALTABA ESTA VALIDACIÓN o no estaba explícita
         ]);
-        
+
         $datosAActualizar = [];
         if (isset($datos['iban'])) $datosAActualizar['IBAN'] = $datos['iban'];
         if (isset($datos['calle_y_n'])) $datosAActualizar['calle_y_n'] = $datos['calle_y_n'];
@@ -91,7 +129,16 @@ class ContratoController extends Controller
         ], 200);
     }
     /**
-     * Eliminar un contrato
+     * @OA\Delete(
+     *     path="/contratos/cancelar",
+     *     summary="Cancelar/eliminar contrato",
+     *     tags={"Contratos"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Contrato eliminado"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado"),
+     *     @OA\Response(response=404, description="Contrato no encontrado")
+     * )
      */
     public function cancelar(Request $request)
     {
@@ -114,7 +161,16 @@ class ContratoController extends Controller
         ], 200);
     }
     /**
-     * Mostrar un contrato con todo su detalle(servicios y líneas móviles)
+     * @OA\Get(
+     *     path="/contratos/mostrar",
+     *     summary="Mostrar contrato del usuario con servicios",
+     *     tags={"Contratos"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Contrato con servicios"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado"),
+     *     @OA\Response(response=404, description="Contrato no encontrado")
+     * )
      */
     public function mostrar(Request $request)
     {

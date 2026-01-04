@@ -4,11 +4,13 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Smartphone, Save } from "lucide-react";
 
+// Componente para editar una opción de móvil existente
 export default function EditarOpcionMovilComponent() {
     const { id } = useParams();
     const { token } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    // Estados del formulario
     const [tarifaMovil, setTarifaMovil] = useState(null);
     const [gbDatos, setGbDatos] = useState("");
     const [minutos, setMinutos] = useState("");
@@ -21,7 +23,7 @@ export default function EditarOpcionMovilComponent() {
                 const response = await obtenerDatosMovil(id, token);
                 setTarifaMovil(response.datos);
 
-                // Inicializar inputs
+                // Rellenamos los campos con los datos actuales
                 setGbDatos(response.datos.gb_datos);
                 setMinutos(response.datos.min_llamadas);
                 setPrecio(response.datos.precio);

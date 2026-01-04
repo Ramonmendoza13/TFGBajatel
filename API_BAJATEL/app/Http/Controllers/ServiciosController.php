@@ -10,7 +10,20 @@ use App\Models\MovilOpcion;
 class ServiciosController extends Controller
 {
     /**
-     * Mostrar todos los servicios disponibles
+     * @OA\Get(
+     *     path="/servicios/disponibles",
+     *     summary="Listar servicios disponibles (público)",
+     *     tags={"Servicios Disponibles"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Servicios disponibles",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="fibra", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="tv", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="movil", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function mostrarServiciosDisponibles()
     {
@@ -26,7 +39,15 @@ class ServiciosController extends Controller
     }
 
     /**
-     * Mostrar todos los servicios disponibles y no disponibles (ADMIN)
+     * @OA\Get(
+     *     path="/servicios/mostrar",
+     *     summary="Listar todos los servicios (admin/gestor)",
+     *     tags={"Servicios Disponibles"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Todos los servicios"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Requiere rol gestor/admin")
+     * )
      */
     public function mostrarTodosServicios()
     {

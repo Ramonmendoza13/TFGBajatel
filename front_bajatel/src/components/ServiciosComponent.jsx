@@ -3,6 +3,7 @@ import { getServiciosDisponibles } from "../api/serviciosApi";
 import { Gauge, Smartphone, Tv, CheckCircle, Zap, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// Componente que muestra todos los servicios disponibles
 function ServiciosComponent() {
     const [servicios, setServicios] = useState(null);
     const [loading, setLoading] = useState(true);

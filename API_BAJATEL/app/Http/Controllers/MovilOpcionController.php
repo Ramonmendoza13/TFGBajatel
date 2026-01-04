@@ -8,7 +8,25 @@ use App\Models\MovilOpcion;
 class MovilOpcionController extends Controller
 {
     /**
-     * Anadir una nueva opcion de Movil
+     * @OA\Post(
+     *     path="/servicios/movil",
+     *     summary="Añadir opción de móvil",
+     *     tags={"Admin - Móvil"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"gb_datos","minutos","precio","disponible"},
+     *             @OA\Property(property="gb_datos", type="number", example=50),
+     *             @OA\Property(property="minutos", type="number", example=1000),
+     *             @OA\Property(property="precio", type="number", example=15.99),
+     *             @OA\Property(property="disponible", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Opción añadida"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Requiere rol gestor/admin")
+     * )
      */
     public function anadirOpcionMovil(Request $request)
     {
@@ -32,7 +50,15 @@ class MovilOpcionController extends Controller
         ], 201);
     }
     /**
-     * Mostrar los datos de una opción de móvil existente.
+     * @OA\Get(
+     *     path="/servicios/movil/{id}",
+     *     summary="Mostrar opción de móvil",
+     *     tags={"Admin - Móvil"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Opción encontrada"),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
      */
     public function mostrarOpcionMovil($id)
     {
@@ -72,7 +98,23 @@ class MovilOpcionController extends Controller
         ], 200);
     }
     /**
-     * Editar una opcion de Movil existente
+     * @OA\Put(
+     *     path="/servicios/movil/{id}",
+     *     summary="Editar opción de móvil",
+     *     tags={"Admin - Móvil"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="gb_datos", type="number"),
+     *             @OA\Property(property="minutos", type="number"),
+     *             @OA\Property(property="precio", type="number"),
+     *             @OA\Property(property="disponible", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Opción actualizada"),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
      */
     public function editarOpcionMovil(Request $request, $id)
     {

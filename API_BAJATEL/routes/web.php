@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Ruta comentada para permitir que Swagger UI se muestre en /
+// Route::get('/', function () {
+//     return view('welcome');
+// });

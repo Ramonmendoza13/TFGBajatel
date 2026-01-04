@@ -8,7 +8,24 @@ use App\Models\TvOpcion;
 class TVOpcionController extends Controller
 {
     /**
-     * Anadir una nueva opcion de TV
+     * @OA\Post(
+     *     path="/servicios/tv",
+     *     summary="Añadir opción de TV",
+     *     tags={"Admin - TV"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nombre_paquete","precio","disponible"},
+     *             @OA\Property(property="nombre_paquete", type="string", example="Paquete Premium"),
+     *             @OA\Property(property="precio", type="number", example=19.99),
+     *             @OA\Property(property="disponible", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Opción añadida"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Requiere rol gestor/admin")
+     * )
      */
     public function anadirOpcionTV(Request $request)
     {
@@ -30,7 +47,15 @@ class TVOpcionController extends Controller
         ], 201);
     }
     /**
-     * Mostrar los datos de una opción de TV existente.
+     * @OA\Get(
+     *     path="/servicios/tv/{id}",
+     *     summary="Mostrar opción de TV",
+     *     tags={"Admin - TV"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Opción encontrada"),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
      */
     public function mostrarOpcionTv($id)
     {
@@ -67,7 +92,22 @@ class TVOpcionController extends Controller
         ], 200);
     }
     /**
-     * Editar una opcion de TV existente
+     * @OA\Put(
+     *     path="/servicios/tv/{id}",
+     *     summary="Editar opción de TV",
+     *     tags={"Admin - TV"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="nombre_paquete", type="string"),
+     *             @OA\Property(property="precio", type="number"),
+     *             @OA\Property(property="disponible", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Opción actualizada"),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
      */
     public function editarOpcionTV(Request $request, $id)
     {

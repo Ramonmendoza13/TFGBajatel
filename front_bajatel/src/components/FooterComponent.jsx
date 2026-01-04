@@ -1,3 +1,4 @@
+// Componente del pie de página
 export default function FooterComponent() {
     return (
         <footer className="bg-black text-gray-300 py-6">

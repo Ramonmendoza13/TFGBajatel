@@ -4,9 +4,9 @@ import Logo from '../assets/imagenes/LOGO_SIMPLE.png';
 import { Menu, X, LogIn } from 'lucide-react';
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { User } from "lucide-react"; // icono para zona privada
+import { User } from "lucide-react";
 
-
+// Componente de la barra de navegación
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
     const { token } = useContext(AuthContext);
@@ -61,7 +61,6 @@ export default function NavBar() {
                     {/* LOGO + NOMBRE */}
                     <div className="flex-shrink-0">
                         <Link to="/" className="flex items-center gap-3 group" onClick={() => setIsOpen(false)}>
-                            {/* Asegúrate de que el logo tenga buena resolución o usa un SVG */}
                             <img src={Logo} alt="Bajatel Logo" className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-300" />
                             <span className="text-2xl font-extrabold text-blue-900 tracking-tight group-hover:text-blue-700 transition-colors">
                                 Bajatel

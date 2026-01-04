@@ -3,14 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { loginRequest } from "../api/authApi";
 
+// Componente de inicio de sesión
 function LoginComponent() {
     const { login } = useContext(AuthContext);
+    // Estados del formulario
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Función para enviar el formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -18,7 +21,7 @@ function LoginComponent() {
 
         try {
             const data = await loginRequest(email, password);
-            login(data); // guarda token + usuario
+            login(data); // guardamos token y usuario
             navigate("/zona-privada");
         } catch (err) {
             setError("Credenciales incorrectas");

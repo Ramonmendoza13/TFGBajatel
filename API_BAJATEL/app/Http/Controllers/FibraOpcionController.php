@@ -8,6 +8,26 @@ use App\Models\FibraOpcion;
 
 class FibraOpcionController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/servicios/fibra",
+     *     summary="Añadir opción de fibra",
+     *     tags={"Admin - Fibra"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"velocidad","precio"},
+     *             @OA\Property(property="velocidad", type="number", example=600),
+     *             @OA\Property(property="precio", type="number", example=29.99),
+     *             @OA\Property(property="disponible", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Opción añadida"),
+     *     @OA\Response(response=401, description="No autenticado"),
+     *     @OA\Response(response=403, description="No autorizado - Requiere rol gestor/admin")
+     * )
+     */
     public function anadirOpcionFibra(Request $request)
     {
         // Validar los datos de entrada
@@ -51,7 +71,15 @@ class FibraOpcionController extends Controller
     }
 
     /**
-     * Mostrar los datos de una opción de fibra existente.
+     * @OA\Get(
+     *     path="/servicios/fibra/{id}",
+     *     summary="Mostrar opción de fibra",
+     *     tags={"Admin - Fibra"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Opción encontrada"),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
      */
     public function mostrarOpcionFibra($id)
     {
@@ -73,7 +101,22 @@ class FibraOpcionController extends Controller
     }
 
     /**
-     * Editar una opción de fibra existente.
+     * @OA\Put(
+     *     path="/servicios/fibra/{id}",
+     *     summary="Editar opción de fibra",
+     *     tags={"Admin - Fibra"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="velocidad", type="number"),
+     *             @OA\Property(property="precio", type="number"),
+     *             @OA\Property(property="disponible", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Opción actualizada"),
+     *     @OA\Response(response=404, description="No encontrada")
+     * )
      */
     public function editarOpcionFibra(Request $request, $id)
     {
@@ -86,7 +129,7 @@ class FibraOpcionController extends Controller
         }
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'velocidad' => 'sometimes|numeric|max:10000',  
+            'velocidad' => 'sometimes|numeric|max:10000',
             'precio' => 'sometimes|numeric',
             'disponible' => 'sometimes|boolean',
         ]);

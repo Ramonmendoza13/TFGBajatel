@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Tv, Save } from "lucide-react";
 
+// Componente para editar una opción de TV existente
 export default function EditarOpcionTvComponent() {
     const { id } = useParams();
     const { token } = useContext(AuthContext);

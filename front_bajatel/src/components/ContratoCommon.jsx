@@ -3,7 +3,7 @@ import {
     Phone, ArrowRightLeft, MapPin, CreditCard, AlertTriangle
 } from "lucide-react";
 
-// --- COMPONENTES UI COMPARTIDOS ---
+// Componentes reutilizables para contratar y editar contratos
 
 export const LoadingScreen = () => (
     <div className="flex justify-center items-center h-screen pt-20">

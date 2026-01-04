@@ -6,6 +6,7 @@ import {
     ArrowRight
 } from "lucide-react";
 
+// Componente de la página principal
 function MainComponent() {
     return (
         <div className="flex flex-col w-full min-h-screen bg-gray-50 font-sans">
