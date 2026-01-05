@@ -14,11 +14,22 @@ function ZonaPrivadaComponent() {
 
   const handleLogout = async () => {
     try {
+      // Marcar que estamos cerrando sesión
+      sessionStorage.setItem("isLoggingOut", "true");
+      
       await logoutRequest(token);
       logout();
+      
+      // Navegar a la página principal
       navigate("/");
+      
+      // Limpiar el flag después de un breve delay
+      setTimeout(() => {
+        sessionStorage.removeItem("isLoggingOut");
+      }, 100);
     } catch (err) {
       console.error("Error al cerrar sesión", err);
+      sessionStorage.removeItem("isLoggingOut");
     }
   };
 

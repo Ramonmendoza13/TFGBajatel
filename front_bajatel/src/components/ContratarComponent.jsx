@@ -39,6 +39,8 @@ export default function ContratarComponent() {
         // Errores HTTP conocidos
         if (error.response.status === 400) {
           setError("Ya tienes un contrato. Edítalo desde la zona privada.");
+        }  else if (error.response.status === 401) {
+          setError(error.response.data?.message || `Debes iniciar sesión para contratar servicios.`);
         } else {
           setError(error.response.data?.message || `Error ${error.response.status}: No se pudo crear el contrato`);
         }

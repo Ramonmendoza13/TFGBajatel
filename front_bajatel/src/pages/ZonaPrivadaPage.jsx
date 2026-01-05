@@ -11,7 +11,10 @@ export default function ZonaPrivadaPage() {
     // Redirigir al login si no hay token (verificar contexto y localStorage)
     useEffect(() => {
         const tokenEnStorage = localStorage.getItem("token");
-        if (!token && !tokenEnStorage) {
+        const isLoggingOut = sessionStorage.getItem("isLoggingOut");
+        
+        // No redirigir si está en proceso de logout
+        if (!token && !tokenEnStorage && !isLoggingOut) {
             navigate("/login");
         }
     }, [token, navigate]);
