@@ -268,10 +268,5 @@ Año académico: 2025-2026
 
 Para cualquier consulta sobre el proyecto, puedes contactar a través de:
 - GitHub: [@Ramonmendoza13](https://github.com/Ramonmendoza13)
-- Email: rmc1@email.com
-
+- Email: ramonm828@gmail.com
 ---
-
-## 🙏 Agradecimientos
-
-Agradecimientos especiales a los profesores y compañeros del ciclo DAW por su apoyo durante el desarrollo de este proyecto.
